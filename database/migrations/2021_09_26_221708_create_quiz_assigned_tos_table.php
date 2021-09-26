@@ -14,8 +14,8 @@ class CreateQuizAssignedTosTable extends Migration
     public function up()
     {
         Schema::create('quiz_assigned_tos', function (Blueprint $table) {
-            $table->foreign('quiz_id')->references('id')->on('quizzes');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreignId('quiz_id')->constrained('quizzes');
+            $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });
     }

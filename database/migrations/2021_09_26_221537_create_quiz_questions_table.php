@@ -15,7 +15,7 @@ class CreateQuizQuestionsTable extends Migration
     {
         Schema::create('quiz_questions', function (Blueprint $table) {
             $table->id();
-            $table->foreign('quiz_id')->references('id')->on('quizzes');
+            $table->foreignId('quiz_id')->constrained('quizzes');
             $table->text('question_text');
             $table->float('question_weight');
             $table->boolean('is_one_choice_answer')->default(1);
