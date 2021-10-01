@@ -150,6 +150,12 @@
                 </li>
             </ul>
         </li>
+        <li class="side-menus">
+            <a class="nav-link" href="{{ route('quizzes.index') }}">
+                <i class="fas fa-file-alt"></i>
+                <span>{{ __('messages.quizzes.quizzes_list') }}</span>
+            </a>
+        </li>
         <li class="nav-item side-menus dropdown">
             <a class="nav-link has-dropdown" href="#"><i class="fas fa-solar-panel"></i>
                 <span>{{ __('messages.plan.subscriptions') }}</span>

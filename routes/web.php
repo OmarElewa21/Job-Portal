@@ -53,6 +53,7 @@ use App\Http\Controllers\TestimonialsController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TranslationManagerController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\QuizController;
 use App\Http\Controllers\Web;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -784,3 +785,7 @@ Route::get('/upgrade-to-v8-1-0', function () {
     \Illuminate\Support\Facades\Artisan::call('db:seed',
         ['--class' => 'FooterLogoSeeder']);
 });
+
+
+// Handling Quizes Section
+Route::resource('quizzes', QuizController::class);

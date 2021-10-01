@@ -1080,4 +1080,17 @@ return [
         'candidate_note'             => 'Candidate Note',
         'your_note'                  => 'Your Note',
     ],
+
+    //Quizes
+    'quizzes' => [
+        'quizzes_title' => 'Quizzes',
+        'quiz_name' => 'Name',
+        'quiz_description' => 'Description',
+        'quiz_created_by' => 'Created By',
+        'quizzes_list' => 'Quizzes',
+        'quiz_add' => 'Add',
+        'new_quiz' => 'Add New Quiz',
+        'add_name' => 'Name',
+        'description' => 'Description'
+    ],
 ];

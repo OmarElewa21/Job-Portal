@@ -3,18 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Models\Quiz;
+use DB;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
-class QuizController extends Controller
+class QuizController extends AppBaseController
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $ListofQuizzes = DB::table('quizzes')
+                        ->join('users', 'quizzes.created_by', '=', 'users.id')
+                        ->select('quizzes.*', 'users.email')
+                        ->get();
+        return view('quizzes.index', [
+            'ListOfQuizzes' => $ListofQuizzes
+        ]);
     }
 
     /**
@@ -35,7 +45,18 @@ class QuizController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $newQuiz = new Quiz();
+        try{
+            $newQuiz-> fill([
+                'quiz_name' => $request->name,
+                'quiz_description' => $request->description,
+                'created_by' => Auth::id()
+            ])->save();
+            return back();
+        }
+            catch (Exception $e){
+                return $this->sendError($e->getMessage());
+        }
     }
 
     /**
@@ -78,8 +99,10 @@ class QuizController extends Controller
      * @param  \App\Models\Quiz  $quiz
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Quiz $quiz)
+    public function destroy($id)
     {
-        //
+        $quiz = Quiz::find($id);
+        $quiz->delete();
+        return 1;
     }
 }
