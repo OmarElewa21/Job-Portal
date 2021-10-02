@@ -92,6 +92,8 @@ Route::post('news-letter', [Web\WebController::class, 'newsLetter'])->name('news
 Route::group(['middleware' => ['auth', 'role:Admin', 'xss', 'verified.user'], 'prefix' => 'admin'], function () {
     // Handling Quizes Section
     Route::resource('quizzes', QuizController::class);
+    Route::resource('quiz-questions', QuizQuestionController::class);
+
     // logs view route
     Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
     

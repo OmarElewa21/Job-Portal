@@ -7,7 +7,8 @@ use DB;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
+use App\Models\QuizQuestion;
+use App\Models\QuizQuestionAnswer;
 
 class QuizController extends AppBaseController
 {
@@ -16,7 +17,7 @@ class QuizController extends AppBaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
         $ListofQuizzes = DB::table('quizzes')
                         ->join('users', 'quizzes.created_by', '=', 'users.id')
@@ -65,9 +66,18 @@ class QuizController extends AppBaseController
      * @param  \App\Models\Quiz  $quiz
      * @return \Illuminate\Http\Response
      */
-    public function show(Quiz $quiz)
+    public function show($id)
     {
-        //
+        $quiz = Quiz::find($id);
+        $listOfQuizQuestion = QuizQuestion::where('quiz_id', $id)->get();
+        foreach($listOfQuizQuestion as $question){
+            $answers = QuizQuestionAnswer::where('quiz_question_id', $question->id)->get();
+            $question['ListOfAnswers'] = $answers;
+        }
+        return view('quizzes.questions.index', [
+            'questionsList' => $listOfQuizQuestion,
+            'quiz_name' => $quiz->quiz_name
+        ]);
     }
 
     /**
@@ -112,6 +122,11 @@ class QuizController extends AppBaseController
      */
     public function destroy($id)
     {
+        $quiz_questions = QuizQuestion::where('quiz_id', $id)->get();
+        foreach($quiz_questions as $q){
+            QuizQuestionAnswer::where('quiz_question_id', $q->id)->delete();
+            $q->delete();
+        }
         $quiz = Quiz::find($id);
         $quiz->delete();
         return 1;

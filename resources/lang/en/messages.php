@@ -1088,11 +1088,20 @@ return [
         'quiz_description' => 'Description',
         'quiz_created_by' => 'Created By',
         'quizzes_list' => 'Quizzes',
-        'quiz_add' => 'Add',
+        'quiz_add' => 'Add New Quiz',
         'new_quiz' => 'Add New Quiz',
         'name' => 'Name',
         'description' => 'Description',
         'edit_quiz' => 'Edit Quiz',
         'name' => 'Name',
+        'quiz_question_title' => 'Quiz questions',
+        'question_add' => 'Add New Question',
+        'question_text' => 'Question',
+        'question_answers' => 'Answers',
+        'question_grade' => 'Question Grade',
+        'is_multiple_choice' => 'Has Multiple Correct Answers',
+        'is_optional' => 'Is Optional'
+
+
     ],
 ];
