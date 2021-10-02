@@ -17,7 +17,7 @@
             <a class="pr-2 m-auto" href="{{ route('quizzes.show', $Quiz->id) }}" title="View">
                 <i class="fas fa-eye text-info"></i>
             </a>
-            <a class="pl-1 pr-1 m-auto editQuizModal" href="#" title="Edit">
+            <a class="pl-1 pr-1 m-auto editQuizModal" href="#" title="Edit" onclick="quizzes.edit('{{$Quiz->id}}')">
                 <i class="fas fa-edit"></i>
             </a>
             <a class="pl-2 m-auto" href="#" title="Delete" onclick="quizzes.delete('{{$Quiz->id}}')">
