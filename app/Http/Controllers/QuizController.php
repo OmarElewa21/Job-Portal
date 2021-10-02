@@ -76,9 +76,10 @@ class QuizController extends AppBaseController
      * @param  \App\Models\Quiz  $quiz
      * @return \Illuminate\Http\Response
      */
-    public function edit(Quiz $quiz)
+    public function edit($id)
     {
-        //
+        $quiz = Quiz::find($id);
+        return $quiz;
     }
 
     /**
@@ -88,9 +89,19 @@ class QuizController extends AppBaseController
      * @param  \App\Models\Quiz  $quiz
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Quiz $quiz)
+    public function update(Request $request, $id)
     {
-        //
+        $quiz = Quiz::find($id);
+        try{
+            $quiz-> update([
+                'quiz_name' => $request->name,
+                'quiz_description' => $request->description,
+            ]);
+            return 1;
+        }
+            catch (Exception $e){
+                return $this->sendError($e->getMessage());
+        }
     }
 
     /**

@@ -1090,7 +1090,9 @@ return [
         'quizzes_list' => 'Quizzes',
         'quiz_add' => 'Add',
         'new_quiz' => 'Add New Quiz',
-        'add_name' => 'Name',
-        'description' => 'Description'
+        'name' => 'Name',
+        'description' => 'Description',
+        'edit_quiz' => 'Edit Quiz',
+        'name' => 'Name',
     ],
 ];

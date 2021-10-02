@@ -4,6 +4,7 @@
 @endsection
 @push('css')
     <link href="{{ asset('assets/css/jquery.dataTables.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('assets/css/jquery-confirm.min.css') }}" rel="stylesheet" type="text/css"/>
 @endpush
 
 @section('content')
@@ -23,6 +24,7 @@
             </div>
         </div>
         @include('quizzes.add_modal')
+        @include('quizzes.edit_modal')
     </section>
 @endsection
 
@@ -30,6 +32,7 @@
     <script>
         let quizStoreUrl = "{{ route('quizzes.store') }}";
     </script>
-    <script src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{asset('assets/js/jquery-confirm.min.js')}}"></script>
+    <script src="{{asset('assets/js/jquery.dataTables.min.js')}}"></script>
     <script src="{{mix('assets/js/quizzes/quizzes.js')}}"></script>
 @endpush

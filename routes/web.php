@@ -90,7 +90,8 @@ Route::get('/', [Web\WebController::class, 'index'])->name('front');
 Route::post('news-letter', [Web\WebController::class, 'newsLetter'])->name('news-letter.create');
 
 Route::group(['middleware' => ['auth', 'role:Admin', 'xss', 'verified.user'], 'prefix' => 'admin'], function () {
-
+    // Handling Quizes Section
+    Route::resource('quizzes', QuizController::class);
     // logs view route
     Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
     
@@ -785,7 +786,3 @@ Route::get('/upgrade-to-v8-1-0', function () {
     \Illuminate\Support\Facades\Artisan::call('db:seed',
         ['--class' => 'FooterLogoSeeder']);
 });
-
-
-// Handling Quizes Section
-Route::resource('quizzes', QuizController::class);
