@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\QuizQuestion;
 use Illuminate\Http\Request;
+use App\Models\QuizQuestionAnswer;
 
 class QuizQuestionController extends Controller
 {
@@ -12,7 +13,7 @@ class QuizQuestionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($quiz_id)
+    public function index()
     {
         
     }
@@ -78,8 +79,10 @@ class QuizQuestionController extends Controller
      * @param  \App\Models\QuizQuestion  $quizQuestion
      * @return \Illuminate\Http\Response
      */
-    public function destroy(QuizQuestion $quizQuestion)
+    public function destroy($id)
     {
-        //
+        QuizQuestionAnswer::where('quiz_question_id', $id)->delete();
+        QuizQuestion::find($id)->delete();
+        return 1;
     }
 }

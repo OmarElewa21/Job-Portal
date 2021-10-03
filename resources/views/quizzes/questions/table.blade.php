@@ -38,13 +38,13 @@
         <td>
             <div class="d-flex">
                 <a class="pr-2 m-auto" href="{{ route('quizzes.show', $question->id) }}" title="View More Details">
-                    <i class="fas fa-eye text-info"></i>
+                    <i class="fas fa-eye text-info details"></i>
                 </a>
                 <a class="pl-1 pr-1 m-auto editQuizModal" href="#" title="Edit" onclick="quizzes.edit('{{$question->id}}')">
-                    <i class="fas fa-edit"></i>
+                    <i class="fas fa-edit details"></i>
                 </a>
-                <a class="pl-2 m-auto" href="#" title="Delete" onclick="quizzes.delete('{{$question->id}}')">
-                    <i class="fas fa-trash-alt text-danger"></i>  
+                <a class="pl-2 m-auto" href="#" title="Delete" onclick="questions.delete('{{$question->id}}')">
+                    <i class="fas fa-trash-alt text-danger details"></i>  
                 </a>
             </div>
         </td>
@@ -62,5 +62,8 @@
     }
     .regular-color{
         color: black;
+    }
+    .details{
+        font-size: medium;
     }
 </style>

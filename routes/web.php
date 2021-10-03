@@ -54,6 +54,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TranslationManagerController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\QuizController;
+use App\Http\Controllers\QuizQuestionController;
 use App\Http\Controllers\Web;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -92,7 +93,8 @@ Route::post('news-letter', [Web\WebController::class, 'newsLetter'])->name('news
 Route::group(['middleware' => ['auth', 'role:Admin', 'xss', 'verified.user'], 'prefix' => 'admin'], function () {
     // Handling Quizes Section
     Route::resource('quizzes', QuizController::class);
-    Route::resource('quiz-questions', QuizQuestionController::class);
+    
+    Route::post('/questions/{id}', [QuizQuestionController::class, 'destroy']);
 
     // logs view route
     Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
