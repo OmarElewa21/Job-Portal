@@ -2,8 +2,9 @@
     <thead>
     <tr>
         <th scope="col" class="col-2">{{ __('messages.quizzes.quiz_name') }}</th>
-        <th scope="col" class="col-5">{{ __('messages.quizzes.quiz_description') }}</th>
-        <th scope="col" class="col-2">{{ __('messages.quizzes.quiz_created_by') }}</th>
+        <th scope="col" class="col-4">{{ __('messages.quizzes.quiz_description') }}</th>
+        <th scope="col" class="col-1">{{ __('messages.quizzes.quiz_created_by') }}</th>
+        <th scope="col" class="col-1">{{ __('messages.quizzes.which_candidates') }}</th>
         <th scope="col" class="col-1"></th>
     </tr>
     </thead>
@@ -13,6 +14,11 @@
         <td class="regular-color">{{ $Quiz->quiz_name }}</td>
         <td class="regular-color">{{ $Quiz->quiz_description }}</td>
         <td class="regular-color">{{ $Quiz->email }}</td>
+        <td class="regular-color">
+            <a class="pr-2 m-auto" href="{{ route('quizzes.show', $Quiz->id) }}" title="Select Candidates">
+                <i class="fas fa-user-check text-info details"></i>
+            </a>
+        </div>
         <td class="d-flex">
             <div class="d-flex">
                 <a class="pr-2 m-auto" href="{{ route('quizzes.show', $Quiz->id) }}" title="View">

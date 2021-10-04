@@ -37,9 +37,6 @@
         </td>
         <td>
             <div class="d-flex">
-                <a class="pr-2 m-auto" href="{{ route('quizzes.show', $question->id) }}" title="View More Details">
-                    <i class="fas fa-eye text-info details"></i>
-                </a>
                 <a class="pl-1 pr-1 m-auto editQuizModal" href="#" title="Edit" onclick="quizzes.edit('{{$question->id}}')">
                     <i class="fas fa-edit details"></i>
                 </a>
