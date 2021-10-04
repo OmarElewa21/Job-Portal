@@ -15,9 +15,6 @@
                             <div class="options">
                                 <input type="checkbox" name="is_optional" class="ml-4 mr-1">
                                 <label class="option-label regular-color"> Is an optional / bonus question </label> <br>
-
-                                <input type="checkbox" name="is_one_choice_answer" class="ml-4 mr-1">
-                                <label class="option-label regular-color"> Has more than one correct answer </label>
                             </div>
                             <div class="grade-box mr-4">
                                 <label class="option-label regular-color"> Question points : </label>
