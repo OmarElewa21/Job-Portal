@@ -1100,7 +1100,9 @@ return [
         'question_answers' => 'Answers',
         'question_grade' => 'Question Grade',
         'is_multiple_choice' => 'Has Multiple Correct Answers',
-        'is_optional' => 'Is Optional'
+        'is_optional' => 'Is Optional',
+        'new_question' => 'New Question',
+        'answers' => 'Answers',
 
 
     ],

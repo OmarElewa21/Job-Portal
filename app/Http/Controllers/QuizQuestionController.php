@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\QuizQuestion;
 use Illuminate\Http\Request;
 use App\Models\QuizQuestionAnswer;
+use Exception;
 
 class QuizQuestionController extends Controller
 {
@@ -36,7 +37,29 @@ class QuizQuestionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $newQuestion = new QuizQuestion();
+        $newAnswer = new QuizQuestionAnswer();
+        try{
+            $newQuestion->fill([
+                'quiz_id' => $request->query('id'),
+                'question_text' => $request->question_text,
+                'question_weight' => $request->question_weight,
+                'is_one_choice_answer' => $request->is_one_choice_answer == 'on' ? 0 : 1,
+                'is_optional' => $request->is_optional == 'on' ? 1 : 0
+            ])->save();
+            
+            foreach($request->answer_text as $index=>$value){
+                $newAnswer->create([
+                    'quiz_question_id' => $newQuestion->id,
+                    'answer_text' => $value,
+                    'is_true_answer' => array_key_exists($index, $request->is_true_answer) ? 1 : 0
+                ])->save();
+            }
+            return back();
+        }
+            catch (Exception $e){
+                return $this->sendError($e->getMessage());
+        }
     }
 
     /**

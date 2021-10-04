@@ -12,7 +12,7 @@
         <div class="section-header">
             <h1>{{ $quiz_name }}</h1>
             <div class="section-header-breadcrumb">
-                <a href="#" class="btn btn-primary form-btn addQuizModal back-btn-right">{{ __('messages.quizzes.question_add') }}
+                <a href="#" class="btn btn-primary form-btn addQuestionModal back-btn-right">{{ __('messages.quizzes.question_add') }}
                     <i class="fas fa-plus"></i></a>
             </div>
         </div>
@@ -23,6 +23,7 @@
                 </div>
             </div>
         </div>
+        @include('quizzes.questions.add_modal')
     </section>
 @endsection
 
@@ -32,5 +33,6 @@
     </script>
     <script src="{{asset('assets/js/jquery-confirm.min.js')}}"></script>
     <script src="{{asset('assets/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{asset('assets/js/notify.min.js')}}"></script>
     <script src="{{mix('assets/js/quizzes/questions.js')}}"></script>
 @endpush

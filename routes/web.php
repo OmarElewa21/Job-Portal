@@ -90,6 +90,8 @@ Route::get('/', [Web\WebController::class, 'index'])->name('front');
 
 Route::post('news-letter', [Web\WebController::class, 'newsLetter'])->name('news-letter.create');
 
+Route::post('/questions/store', [QuizQuestionController::class, 'store'])->name('question.store');
+
 Route::group(['middleware' => ['auth', 'role:Admin', 'xss', 'verified.user'], 'prefix' => 'admin'], function () {
     // Handling Quizes Section
     Route::resource('quizzes', QuizController::class);

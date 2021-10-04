@@ -76,7 +76,8 @@ class QuizController extends AppBaseController
         }
         return view('quizzes.questions.index', [
             'questionsList' => $listOfQuizQuestion,
-            'quiz_name' => $quiz->quiz_name
+            'quiz_name' => $quiz->quiz_name,
+            'quiz_id' => $quiz->id
         ]);
     }
 
