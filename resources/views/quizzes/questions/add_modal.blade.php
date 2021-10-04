@@ -42,7 +42,7 @@
                                 <div class="answer-subbox d-flex justify-content-around align-items-center">
                                     <i class="fas fa-minus-circle answer-fas text-danger" onclick="remove_answer(this)"></i>
                                     <textarea name="answer_text[]" class="text-area mb-1" rows="1" required></textarea>
-                                    <i class="fas fa-plus-circle answer-fas text-success" onclick="add_answer(this)"></i>
+                                    <i class="fas fa-plus-circle answer-fas text-success" onclick="add_answer()"></i>
                                 </div>
                                 <input type="checkbox" name="is_true_answer[0]" class="mr-4 is-true">
                             </div>
@@ -51,7 +51,7 @@
                                 <div class="answer-subbox d-flex justify-content-around align-items-center">
                                     <i class="fas fa-minus-circle answer-fas text-danger" onclick="remove_answer(this)"></i>
                                     <textarea name="answer_text[]" class="text-area mb-1" rows="1" required></textarea>
-                                    <i class="fas fa-plus-circle answer-fas last_answer text-success" onclick="add_answer(this)"></i>
+                                    <i class="fas fa-plus-circle answer-fas last_answer text-success" onclick="add_answer()"></i>
                                 </div>
                                 <input type="checkbox" name="is_true_answer[1]" class="is-true answer_2 mr-4">
                             </div>

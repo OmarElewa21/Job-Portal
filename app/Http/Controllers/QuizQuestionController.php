@@ -6,6 +6,8 @@ use App\Models\QuizQuestion;
 use Illuminate\Http\Request;
 use App\Models\QuizQuestionAnswer;
 use Exception;
+use Illuminate\Support\Facades\View;
+
 
 class QuizQuestionController extends Controller
 {
@@ -79,9 +81,11 @@ class QuizQuestionController extends Controller
      * @param  \App\Models\QuizQuestion  $quizQuestion
      * @return \Illuminate\Http\Response
      */
-    public function edit(QuizQuestion $quizQuestion)
+    public function edit($question_id)
     {
-        //
+        $question = QuizQuestion::find($question_id);
+        $question['answers'] = QuizQuestionAnswer::where('quiz_question_id', $question_id)->get();
+        return View::make('quizzes.questions.edit_modal', ['question' => $question]);
     }
 
     /**
@@ -91,9 +95,29 @@ class QuizQuestionController extends Controller
      * @param  \App\Models\QuizQuestion  $quizQuestion
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, QuizQuestion $quizQuestion)
+    public function update(Request $request)
     {
-        //
+        $question = QuizQuestion::find($request->query('id'));
+        QuizQuestionAnswer::where('quiz_question_id', $request->query('id'))->delete();
+        try{
+            $question->update([
+                'question_text' => $request->question_text,
+                'question_weight' => $request->question_weight,
+                'is_one_choice_answer' => $request->is_one_choice_answer == 'on' ? 0 : 1,
+                'is_optional' => $request->is_optional == 'on' ? 1 : 0
+            ]);
+            foreach($request->answer_text as $index=>$value){
+                QuizQuestionAnswer::create([
+                    'quiz_question_id' => $request->query('id'),
+                    'answer_text' => $value,
+                    'is_true_answer' => array_key_exists($index, $request->is_true_answer) ? 1 : 0
+                ])->save();
+            }
+            return back();
+        }
+            catch (Exception $e){
+                return $this->sendError($e->getMessage());
+        }
     }
 
     /**

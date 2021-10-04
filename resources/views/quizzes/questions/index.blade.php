@@ -24,6 +24,7 @@
             </div>
         </div>
         @include('quizzes.questions.add_modal')
+        <div id="editQuestion" class="modal fade" role="dialog"></div>
     </section>
 @endsection
 
