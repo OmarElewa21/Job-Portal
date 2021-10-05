@@ -29,9 +29,6 @@
 @endsection
 
 @push('scripts')
-    <script>
-        let quizStoreUrl = "{{ route('quizzes.store') }}";
-    </script>
     <script src="{{asset('assets/js/jquery-confirm.min.js')}}"></script>
     <script src="{{asset('assets/js/jquery.dataTables.min.js')}}"></script>
     <script src="{{asset('assets/js/notify.min.js')}}"></script>

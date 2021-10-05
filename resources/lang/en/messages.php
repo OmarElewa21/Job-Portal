@@ -1103,7 +1103,7 @@ return [
         'is_optional' => 'Is Optional',
         'new_question' => 'New Question',
         'answers' => 'Answers',
-        'which_candidates' => 'Select candidates'
+        'which_candidates' => 'Select Candidates'
 
 
     ],

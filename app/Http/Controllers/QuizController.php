@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\QuizQuestion;
 use App\Models\QuizQuestionAnswer;
+use Illuminate\Support\Facades\View;
 
 class QuizController extends AppBaseController
 {
@@ -90,7 +91,7 @@ class QuizController extends AppBaseController
     public function edit($id)
     {
         $quiz = Quiz::find($id);
-        return $quiz;
+        return View::make('quizzes.edit_modal', ['quiz' => $quiz]);
     }
 
     /**
@@ -108,7 +109,7 @@ class QuizController extends AppBaseController
                 'quiz_name' => $request->name,
                 'quiz_description' => $request->description,
             ]);
-            return 1;
+            return back();
         }
             catch (Exception $e){
                 return $this->sendError($e->getMessage());
