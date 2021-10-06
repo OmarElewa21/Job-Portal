@@ -90,11 +90,11 @@ Route::get('/', [Web\WebController::class, 'index'])->name('front');
 
 Route::post('news-letter', [Web\WebController::class, 'newsLetter'])->name('news-letter.create');
 
-Route::post('/questions/store', [QuizQuestionController::class, 'store'])->name('question.store');
-
-Route::get('questions/{id}', [QuizQuestionController::class, 'edit']);
-
-Route::put('questions/update', [QuizQuestionController::class, 'update'])->name('question.update');
+Route::group(['middleware' => ['auth', 'role:Admin', 'xss', 'verified.user']], function(){
+    Route::post('/questions/store', [QuizQuestionController::class, 'store'])->name('question.store');
+    Route::get('questions/{id}', [QuizQuestionController::class, 'edit']);
+    Route::put('questions/update', [QuizQuestionController::class, 'update'])->name('question.update');
+});
 
 Route::group(['middleware' => ['auth', 'role:Admin', 'xss', 'verified.user'], 'prefix' => 'admin'], function () {
     // Handling Quizes Section

@@ -1,4 +1,4 @@
-<div class="modal-dialog">
+<div class="modal-dialog" style="max-width: 80%;">
     <!-- Modal content-->
     <div class="modal-content">
         <div class="modal-header">
@@ -37,10 +37,3 @@
         {!! Form::close() !!}
     </div>
 </div>
-
-<style>
-    .modal-dialog{
-        max-width: 80%;
-    }
-</style>
-
