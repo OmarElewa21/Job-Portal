@@ -102,6 +102,9 @@ Route::group(['middleware' => ['auth', 'role:Admin', 'xss', 'verified.user'], 'p
     
     Route::post('/questions/{id}', [QuizQuestionController::class, 'destroy']);
 
+    Route::get('/users/candidates/{quiz_id}', [QuizController::class, 'assign_quiz_render'])->name('quiz.candidate.list');
+    Route::post('/users/candidates', [QuizController::class, 'assign_quiz_store'])->name('quiz.candidate.store');
+
     // logs view route
     Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
     

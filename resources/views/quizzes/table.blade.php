@@ -15,7 +15,7 @@
         <td class="regular-color">{{ $Quiz->quiz_description }}</td>
         <td class="regular-color">{{ $Quiz->email }}</td>
         <td class="regular-color">
-            <a class="pr-2 m-auto" href="{{ route('quizzes.show', $Quiz->id) }}" title="Select Candidates">
+            <a class="pr-2 m-auto" href="#" title="Select Candidates" onclick="quizzes.load_candidates('{{$Quiz->id}}')">
                 <i class="fas fa-user-check text-info details"></i>
             </a>
         </div>

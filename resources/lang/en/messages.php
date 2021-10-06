@@ -1103,8 +1103,10 @@ return [
         'is_optional' => 'Is Optional',
         'new_question' => 'New Question',
         'answers' => 'Answers',
-        'which_candidates' => 'Select Candidates'
-
-
+        'which_candidates' => 'Select Candidates',
+        'candidate_name' => 'Candidate name',
+        'candidate_email' => 'Candidate email',
+        'list_candidates' => 'Candidates List',
+        'select_to_send' => 'Select to send'
     ],
 ];

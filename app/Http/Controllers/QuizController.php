@@ -9,7 +9,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\QuizQuestion;
 use App\Models\QuizQuestionAnswer;
+use App\Models\QuizAssignedTo;
 use Illuminate\Support\Facades\View;
+use App\Models\User;
+use App\Models\Candidate;
 
 class QuizController extends AppBaseController
 {
@@ -132,5 +135,44 @@ class QuizController extends AppBaseController
         $quiz = Quiz::find($id);
         $quiz->delete();
         return 1;
+    }
+
+    /**
+     * return a list of candidates to choose from
+     *
+     */
+    public function assign_quiz_render($quiz_id){
+        $candidates = DB::table('users')
+                        ->join('candidates', 'candidates.user_id', '=', 'users.id')
+                        ->select('users.id', 'users.first_name', 'users.last_name', 'users.email')
+                        ->get();
+        foreach($candidates as $candidate){
+            if(count(QuizAssignedTo::where('quiz_id', $quiz_id)->where('user_id', $candidate->id)->get()) != 0){
+                $candidate->checked = 1;
+            }
+            else{
+                $candidate->checked = 0;
+            }
+        }
+        return View::make('quizzes.load_candidates', ['candidates' => $candidates, 'quiz_id' => $quiz_id]);
+    }
+
+
+    /**
+     * store the assigned quiz to the assigned candidates
+     *
+     */
+    public function assign_quiz_store(Request $request){
+        QuizAssignedTo::where('quiz_id', $request->input('quiz_id'))->delete();
+        if($request->list != null){
+            foreach($request->list as $key=>$user_id){
+                QuizAssignedTo::create([
+                    'quiz_id' => intval($request->input('quiz_id')),
+                    'user_id' => $key
+                ]);
+            }
+        }
+        
+        return back();
     }
 }

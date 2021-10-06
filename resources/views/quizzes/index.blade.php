@@ -25,6 +25,8 @@
         </div>
         @include('quizzes.add_modal')
         <div id="editQuiz" class="modal fade" role="dialog"></div>
+
+        <div id='load_candidates' class="modal fade" role="dialog"></div>
     </section>
 @endsection
 
@@ -34,5 +36,5 @@
     </script>
     <script src="{{asset('assets/js/jquery-confirm.min.js')}}"></script>
     <script src="{{asset('assets/js/jquery.dataTables.min.js')}}"></script>
-    <script src="{{mix('assets/js/quizzes/quizzes.js')}}"></script>
+    <script src="{{mix('assets/js/quizzes/quizzes.js')}}?<?= time() ?>"></script>
 @endpush
