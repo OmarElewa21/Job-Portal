@@ -11,8 +11,6 @@ use App\Models\QuizQuestion;
 use App\Models\QuizQuestionAnswer;
 use App\Models\QuizAssignedTo;
 use Illuminate\Support\Facades\View;
-use App\Models\User;
-use App\Models\Candidate;
 
 class QuizController extends AppBaseController
 {
