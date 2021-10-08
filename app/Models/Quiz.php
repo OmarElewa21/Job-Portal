@@ -13,4 +13,8 @@ class Quiz extends Model
         'quiz_description',
         'created_by'
     ];
+
+    public function quiz_questions(){
+        return $this->hasMany(QuizQuestion::class);
+    }
 }

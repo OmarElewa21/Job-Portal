@@ -55,6 +55,7 @@ use App\Http\Controllers\TranslationManagerController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuizQuestionController;
+use App\Http\Controllers\QuizTakeController;
 use App\Http\Controllers\Web;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -699,6 +700,11 @@ Route::group(['middleware' => ['auth', 'role:Candidate', 'xss', 'verified.user']
     Route::post('/report-job', [Web\JobController::class, 'reportJobAbuse'])->name('report.job.abuse');
 
     Route::post('apply-job', [Web\JobApplicationController::class, 'applyJob'])->name('apply-job');
+
+    Route::resource('/take-quiz', QuizTakeController::class)->only([
+        'index', 'show', 'store'
+    ]);
+
 
     Route::post('/save-favourite-company',
         [Web\CompanyController::class, 'saveFavouriteCompany'])->name('save.favourite.company');

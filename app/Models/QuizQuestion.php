@@ -15,4 +15,8 @@ class QuizQuestion extends Model
         'is_one_choice_answer',
         'is_optional'
     ];
+
+    public function question_answers(){
+        return $this->hasMany(QuizQuestionAnswer::class);
+    }
 }
