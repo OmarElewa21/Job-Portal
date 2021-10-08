@@ -19,4 +19,13 @@ class QuizQuestion extends Model
     public function question_answers(){
         return $this->hasMany(QuizQuestionAnswer::class);
     }
+
+    public function get_question_answers(){
+        return QuizQuestionAnswer::where('quiz_question_id', $this->id)->get();
+    }
+
+    public function quiz()
+    {
+        return $this->belongsTo(Quiz::class);
+    }
 }

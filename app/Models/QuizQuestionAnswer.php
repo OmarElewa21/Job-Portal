@@ -13,4 +13,9 @@ class QuizQuestionAnswer extends Model
         'answer_text',
         'is_true_answer'
     ];
+
+    public function question()
+    {
+        return $this->belongsTo(QuizQuestion::class);
+    }
 }

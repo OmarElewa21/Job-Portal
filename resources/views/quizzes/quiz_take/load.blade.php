@@ -39,7 +39,7 @@
                 </div>
             </div>
     
-            {{ Form::open(['id' => 'take-quiz', 'route' => ['take-quiz.store', 'total_points' => $total_points]])}}
+            {{ Form::open(['id' => 'take-quiz', 'route' => ['take-quiz.store', 'total_points' => $total_points, 'quiz_id' => $quiz_id]])}}
             <section class="w-100">
                     
                 @foreach($questions as $index=>$question)

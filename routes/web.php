@@ -57,6 +57,7 @@ use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuizQuestionController;
 use App\Http\Controllers\QuizTakeController;
 use App\Http\Controllers\Web;
+use App\Models\QuizTake;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -702,8 +703,11 @@ Route::group(['middleware' => ['auth', 'role:Candidate', 'xss', 'verified.user']
     Route::post('apply-job', [Web\JobApplicationController::class, 'applyJob'])->name('apply-job');
 
     Route::resource('/take-quiz', QuizTakeController::class)->only([
-        'index', 'show', 'store'
+        'show', 'store'
     ]);
+
+    Route::get('/quizzes/pending-quizzes', [QuizTakeController::class, 'show_pending_quizzes']);
+    Route::get('/quizzes/taken-quizzes', [QuizTakeController::class, 'show_taken_quizzes']);
 
 
     Route::post('/save-favourite-company',
@@ -805,3 +809,5 @@ Route::get('/upgrade-to-v8-1-0', function () {
     \Illuminate\Support\Facades\Artisan::call('db:seed',
         ['--class' => 'FooterLogoSeeder']);
 });
+
+Route::get('/sss/{s}/{ss}', [QuizTakeController::class, 'calculate_score']);
