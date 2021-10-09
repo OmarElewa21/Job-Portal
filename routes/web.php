@@ -706,9 +706,8 @@ Route::group(['middleware' => ['auth', 'role:Candidate', 'xss', 'verified.user']
         'show', 'store'
     ]);
 
-    Route::get('/quizzes/pending-quizzes', [QuizTakeController::class, 'show_pending_quizzes']);
-    Route::get('/quizzes/taken-quizzes', [QuizTakeController::class, 'show_taken_quizzes']);
-
+    Route::get('/quizzes/pending-quizzes', [QuizTakeController::class, 'show_pending_quizzes'])->name('quizzes.pending');
+    Route::get('/quizzes/taken-quizzes', [QuizTakeController::class, 'show_taken_quizzes'])->name('quizzes.taken');
 
     Route::post('/save-favourite-company',
         [Web\CompanyController::class, 'saveFavouriteCompany'])->name('save.favourite.company');
@@ -809,5 +808,3 @@ Route::get('/upgrade-to-v8-1-0', function () {
     \Illuminate\Support\Facades\Artisan::call('db:seed',
         ['--class' => 'FooterLogoSeeder']);
 });
-
-Route::get('/sss/{s}/{ss}', [QuizTakeController::class, 'calculate_score']);

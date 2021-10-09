@@ -11,7 +11,6 @@ use App\Models\QuizQuestion;
 use App\Models\QuizQuestionAnswer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use PhpOffice\PhpSpreadsheet\Calculation\MathTrig\Sum;
 
 class QuizTakeController extends Controller
 {
@@ -21,10 +20,11 @@ class QuizTakeController extends Controller
      * @param user_id, quiz_id, quiz_total_score
      * @return score number
      */
-    public function calculate_score($user_id, $quiz_id){
+    private function calculate_score($user_id, $quiz_id){
         $score = 0;
         $quiz_questions = Quiz::find($quiz_id)->get_quiz_questions_with_answers();
         $total_quiz_points = $quiz_questions->where('is_optional', 0)->sum('question_weight');
+
         $user_answers = DB::table('quizzes as q')->where('q.id', $quiz_id)
                         ->join('quiz_questions as qq', 'q.id', '=', 'qq.quiz_id')
                         ->join('quiz_question_answers as qqa', 'qq.id', '=', 'qqa.quiz_question_id')
@@ -68,14 +68,18 @@ class QuizTakeController extends Controller
         ];
     }
 
-
     /**
      * Display a listing pending quizzes.
      *
      * @return list of pending quizzes
      */
     public function show_pending_quizzes(){
-
+        $user_id = Auth::id();
+        $quizzes = DB::table('quiz_assigned_tos as qat')->where('user_id', $user_id)
+                        ->where('is_pending', 1)
+                        ->join('quizzes as q', 'q.id', '=', 'qat.quiz_id')
+                        ->select('q.*')->get();
+        return view('candidate.quiz_take.index_pending', ['quizzes' => $quizzes, 'sectionName' => 'pending_quizzes']);
     }
 
     /**
@@ -84,7 +88,14 @@ class QuizTakeController extends Controller
      * @return list of taken quizzes
      */
     public function show_taken_quizzes(){
-
+        $user_id = Auth::id();
+        $quizzes = DB::table('quizzes as q')
+                        ->join('candidate_quiz_scores as qqs', 'q.id', '=', 'qqs.quiz_id')
+                        ->join('quiz_assigned_tos as qat', 'q.id', '=', 'qat.quiz_id')
+                        ->select('q.*', 'qqs.*', 'qat.is_pending')
+                        ->where('qqs.user_id', $user_id)->where('qat.is_pending', 0)
+                        ->get();
+        return view('candidate.quiz_take.index_taken', ['quizzes' => $quizzes, 'sectionName' => 'taken_quizzes']);
     }
 
     /**
@@ -106,7 +117,7 @@ class QuizTakeController extends Controller
                     ]);
                 }
             }
-        }   
+        }
         elseif($request->question_multi_answers == null){
             return redirect()->back()->with('status', 'No answers has been selected');
         }
@@ -129,7 +140,9 @@ class QuizTakeController extends Controller
             'quiz_grade' => $score['score'],
             'score_percentage' => $score['score_percentage']
         ]);
-        return back();
+
+        QuizAssignedTo::where('user_id', $user_id)->where('quiz_id', $request->input(['quiz_id']))->update(['is_pending' => 0]); 
+        return redirect()->route('quizzes.taken');
     }
 
     /**
@@ -142,7 +155,7 @@ class QuizTakeController extends Controller
     {
         $quiz_questions = QuizQuestion::where('quiz_id', $quiz_id)->with('question_answers')->get();
         $total_points = $quiz_questions->where('is_optional', 0)->sum('question_weight');
-        return view('quizzes.quiz_take.load', [
+        return view('candidate.quiz_take.load', [
             'questions' => $quiz_questions,
             'quiz_id' => $quiz_id,
             'quiz_name' => Quiz::find($quiz_id)->quiz_name,

@@ -13,7 +13,7 @@
     <div class="container-fluid">
         <header class="d-flex justify-content-between align-items-center border-bottom p-3 mb-5">
             <div class="ml-5">
-                <a href="#" class="d-flex align-items-center back">
+                <a href="{{ url()->previous() }}" class="d-flex align-items-center back">
                     <i class="fas fa-arrow-left mr-2 d-flex align-items-end"></i>
                     <span class="font-weight-bold">Back</span>
                 </a>

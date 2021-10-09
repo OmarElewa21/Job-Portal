@@ -77,6 +77,7 @@ return [
     'comments'                       => 'Comments',
     'selected_candidate'             => 'Selected Candidates',
     'job_stages'                     => 'Job Stages',
+    'quizzes_title'                  => 'Quizzes',
 
     'common' => [
         'save'                        => 'Save',
@@ -1107,6 +1108,9 @@ return [
         'candidate_name' => 'Candidate name',
         'candidate_email' => 'Candidate email',
         'list_candidates' => 'Candidates List',
-        'select_to_send' => 'Select to send'
+        'select_to_send' => 'Select to send',
+
+        'pending_quizzes' => 'Pending quizzes',
+        'taken_quizzes'   => 'Taken quizzes'  
     ],
 ];

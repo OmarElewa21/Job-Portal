@@ -17,8 +17,8 @@
                     <div class="row mx-1">
                         <div class="ticket-sender-picture  user-profile col-md-2 col-xl-2 col-sm-12 p-0">
                             <img class="profile-image"
-                                 src="{{ getCompanyLogo() }}"
-                                 alt="company logo">
+                                src="{{ getCompanyLogo() }}"
+                                alt="company logo">
                         </div>
                         <div class="ticket-detail col-md-6 col-xl-7 col-sm-12 ">
                             <div class="ticket-title">
@@ -38,7 +38,7 @@
                         </div>
                         <div class="col-md-4 col-xl-3 col-sm-12 pr-md-0">
                             <a href="{{ route('candidate.profile') }}"
-                               class="btn btn-outline-primary float-md-right">
+                                class="btn btn-outline-primary float-md-right">
                                 {{ __('messages.user.edit_profile') }}
                             </a>
                             <br><br>

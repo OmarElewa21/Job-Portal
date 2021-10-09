@@ -9,9 +9,6 @@ class CandidateQuizScore extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = ['quiz_id', 'user_id'];
-    public $incrementing = false;
-
     protected $fillable = [
         'quiz_id',
         'user_id',
