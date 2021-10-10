@@ -22,9 +22,8 @@ class QuizTakeController extends Controller
      */
     private function calculate_score($user_id, $quiz_id){
         $score = 0;
-        $quiz_questions = Quiz::find($quiz_id)->get_quiz_questions_with_answers();
+        $quiz_questions = Quiz::find($quiz_id)->quiz_questions();
         $total_quiz_points = $quiz_questions->where('is_optional', 0)->sum('question_weight');
-
         $user_answers = DB::table('quizzes as q')->where('q.id', $quiz_id)
                         ->join('quiz_questions as qq', 'q.id', '=', 'qq.quiz_id')
                         ->join('quiz_question_answers as qqa', 'qq.id', '=', 'qqa.quiz_question_id')
@@ -32,36 +31,33 @@ class QuizTakeController extends Controller
                         ->select('qt.*', 'qq.*', 'qqa.*')
                         ->where('qt.user_id', $user_id)->get();
 
-        $queston_weight = 0;
-        $answer_quetion_id = 0;
+        $answer_id_list = [];
         foreach($user_answers as $answer){
-            if($answer->is_one_choice_answer == 0){
-                if($answer_quetion_id != $answer->quiz_question_id){
-                    $answer_quetion_id = $answer->quiz_question_id;
-                    $queston_weight = 0;
-                }
-
-                $number_of_true_answers = count(QuizQuestionAnswer::where('quiz_question_id', $answer->quiz_question_id)
-                                            ->where('is_true_answer', 1)->get());
-
+            if($answer->is_one_choice_answer == 1){
                 if($answer->is_true_answer == 1){
-                    $queston_weight += $answer->question_weight/$number_of_true_answers;
-                }
-                else{
-                    $queston_weight -= $answer->question_weight/$number_of_true_answers;
-                }
-
-                if($queston_weight < 0){
-                    $queston_weight = 0;
-                }
-                $score += $queston_weight;
-            }
-            else{
-                if(($answer->is_true_answer == 1)){
                     $score += $answer->question_weight;
                 }
             }
+
+            else{
+                if(!array_key_exists(strval($answer->quiz_question_id), $answer_id_list)){
+                    $answer_id_list[strval($answer->quiz_question_id)] = 0;
+                }
+
+                if($answer->is_true_answer == 1){
+                    $answer_id_list[strval($answer->quiz_question_id)] += $answer->question_weight/QuizQuestionAnswer::where('quiz_question_id', $answer->quiz_question_id)->count('quiz_question_id');
+                }
+                else{
+                    if($answer_id_list[strval($answer->quiz_question_id)] > 0){
+                        $answer_id_list[strval($answer->quiz_question_id)] -= $answer->question_weight/QuizQuestionAnswer::where('quiz_question_id', $answer->quiz_question_id)->count('quiz_question_id');
+                    }
+                }
+            }
         }
+        foreach($answer_id_list as $q_score){
+            $score += $q_score;
+        }
+        
         return [
             "score" => $score,
             "score_percentage" => strval($score / $total_quiz_points * 100) . '%'

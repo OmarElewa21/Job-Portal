@@ -100,7 +100,7 @@ Route::group(['middleware' => ['auth', 'role:Admin', 'xss', 'verified.user']], f
 
 Route::group(['middleware' => ['auth', 'role:Admin', 'xss', 'verified.user'], 'prefix' => 'admin'], function () {
     // Handling Quizes Section
-    Route::resource('quizzes', QuizController::class);
+    Route::resource('quizzes', QuizController::class)->except(['create']);
     
     Route::post('/questions/{id}', [QuizQuestionController::class, 'destroy']);
 
@@ -808,3 +808,4 @@ Route::get('/upgrade-to-v8-1-0', function () {
     \Illuminate\Support\Facades\Artisan::call('db:seed',
         ['--class' => 'FooterLogoSeeder']);
 });
+// Route::get('/sss/{ss}/{s}', [QuizTakeController::class, 'calculate_score']);
