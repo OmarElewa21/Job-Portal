@@ -153,6 +153,13 @@
                     <span>{{ __('messages.job.job_alert') }}</span>
                 </a>
             </li>
+            <li class="nav-item {{ Request::is('candidate/quizzes/pending-quizzes*') || Request::is('candidate/quizzes/taken-quizzes*') ? 'active' : '' }}">
+                <a href="{{ route('quizzes.pending') }}"
+                   class="nav-link {{ Request::is('candidate/quizzes/pending-quizzes*') || Request::is('candidate/quizzes/taken-quizzes*') ? 'active' : ''}}">
+                    <i class="fas fa-file-alt"></i>
+                    <span>{{ __('messages.quizzes_title') }}</span>
+                </a>
+            </li>
         </ul>
     </div>
 </nav>

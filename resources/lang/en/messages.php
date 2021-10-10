@@ -77,6 +77,7 @@ return [
     'comments'                       => 'Comments',
     'selected_candidate'             => 'Selected Candidates',
     'job_stages'                     => 'Job Stages',
+    'quizzes_title'                  => 'Quizzes',
 
     'common' => [
         'save'                        => 'Save',
@@ -1079,5 +1080,37 @@ return [
         'you_cancel_this_slot'       => 'You Cancel this slot',
         'candidate_note'             => 'Candidate Note',
         'your_note'                  => 'Your Note',
+    ],
+
+    //Quizes
+    'quizzes' => [
+        'quizzes_title' => 'Quizzes',
+        'quiz_name' => 'Name',
+        'quiz_description' => 'Description',
+        'quiz_created_by' => 'Created By',
+        'quizzes_list' => 'Quizzes',
+        'quiz_add' => 'Add New Quiz',
+        'new_quiz' => 'Add New Quiz',
+        'name' => 'Name',
+        'description' => 'Description',
+        'edit_quiz' => 'Edit Quiz',
+        'name' => 'Name',
+        'quiz_question_title' => 'Quiz questions',
+        'question_add' => 'Add New Question',
+        'question_text' => 'Question',
+        'question_answers' => 'Answers',
+        'question_grade' => 'Question Grade',
+        'is_multiple_choice' => 'Has Multiple Correct Answers',
+        'is_optional' => 'Is Optional',
+        'new_question' => 'New Question',
+        'answers' => 'Answers',
+        'which_candidates' => 'Select Candidates',
+        'candidate_name' => 'Candidate name',
+        'candidate_email' => 'Candidate email',
+        'list_candidates' => 'Candidates List',
+        'select_to_send' => 'Select to send',
+
+        'pending_quizzes' => 'Pending quizzes',
+        'taken_quizzes'   => 'Taken quizzes'  
     ],
 ];

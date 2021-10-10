@@ -53,7 +53,11 @@ use App\Http\Controllers\TestimonialsController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TranslationManagerController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\QuizController;
+use App\Http\Controllers\QuizQuestionController;
+use App\Http\Controllers\QuizTakeController;
 use App\Http\Controllers\Web;
+use App\Models\QuizTake;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -88,7 +92,20 @@ Route::get('/', [Web\WebController::class, 'index'])->name('front');
 
 Route::post('news-letter', [Web\WebController::class, 'newsLetter'])->name('news-letter.create');
 
+Route::group(['middleware' => ['auth', 'role:Admin', 'xss', 'verified.user']], function(){
+    Route::post('/questions/store', [QuizQuestionController::class, 'store'])->name('question.store');
+    Route::get('questions/{id}', [QuizQuestionController::class, 'edit']);
+    Route::put('questions/update', [QuizQuestionController::class, 'update'])->name('question.update');
+});
+
 Route::group(['middleware' => ['auth', 'role:Admin', 'xss', 'verified.user'], 'prefix' => 'admin'], function () {
+    // Handling Quizes Section
+    Route::resource('quizzes', QuizController::class)->except(['create']);
+    
+    Route::post('/questions/{id}', [QuizQuestionController::class, 'destroy']);
+
+    Route::get('/users/candidates/{quiz_id}', [QuizController::class, 'assign_quiz_render'])->name('quiz.candidate.list');
+    Route::post('/users/candidates', [QuizController::class, 'assign_quiz_store'])->name('quiz.candidate.store');
 
     // logs view route
     Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
@@ -685,6 +702,13 @@ Route::group(['middleware' => ['auth', 'role:Candidate', 'xss', 'verified.user']
 
     Route::post('apply-job', [Web\JobApplicationController::class, 'applyJob'])->name('apply-job');
 
+    Route::resource('/take-quiz', QuizTakeController::class)->only([
+        'show', 'store'
+    ]);
+
+    Route::get('/quizzes/pending-quizzes', [QuizTakeController::class, 'show_pending_quizzes'])->name('quizzes.pending');
+    Route::get('/quizzes/taken-quizzes', [QuizTakeController::class, 'show_taken_quizzes'])->name('quizzes.taken');
+
     Route::post('/save-favourite-company',
         [Web\CompanyController::class, 'saveFavouriteCompany'])->name('save.favourite.company');
     Route::post('/report-to-company', [Web\CompanyController::class, 'reportToCompany'])->name('report.to.company');
@@ -784,3 +808,4 @@ Route::get('/upgrade-to-v8-1-0', function () {
     \Illuminate\Support\Facades\Artisan::call('db:seed',
         ['--class' => 'FooterLogoSeeder']);
 });
+// Route::get('/sss/{ss}/{s}', [QuizTakeController::class, 'calculate_score']);

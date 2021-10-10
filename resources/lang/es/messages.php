@@ -1063,4 +1063,9 @@ return [
         'cancel_this_slot'            => 'Cancelar este espacio',
         'you_cancel_this_slot'        => 'Cancelar este espacio',
     ],
+
+    //Quizes
+    'quizzes' => [
+        'quizzes_title' => 'Quizzes'
+    ],
 ];

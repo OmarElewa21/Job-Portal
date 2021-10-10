@@ -17,7 +17,7 @@
                 </div>
                 <div class="col-sm-6 col-xs-6 col-6 col-md-6 col-xl-6 pl-2 mt-1">
                     <img id='profilePreview' class="img-thumbnail thumbnail-preview"
-                         src="{{ (!empty($user->media[0])) ? $user->media[0]->getFullUrl() : asset('assets/img/infyom-logo.png') }}">
+                        src="{{ (!empty($user->media[0])) ? $user->media[0]->getFullUrl() : asset('assets/img/infyom-logo.png') }}">
                 </div>
             </div>
         </div>
@@ -143,16 +143,16 @@
                     <input type="radio" id="available" name="immediate_available" class="custom-control-input" value="1"
                             {{ isset($user->candidate->immediate_available) ? ($user->candidate->immediate_available == 1 ? 'checked' : '') : 'checked' }}>
                     <label class="custom-control-label"
-                           for="available">{{ __('messages.candidate.immediate_available') }}</label>
+                        for="available">{{ __('messages.candidate.immediate_available') }}</label>
                 </div>
             </div>
             <div class="form-group mb-1">
                 <div class="custom-control custom-radio">
                     <input type="radio" id="not_available" name="immediate_available" class="custom-control-input"
-                           value="0"
+                        value="0"
                             {{ isset($user->candidate->immediate_available) ? ($user->candidate->immediate_available == 0 ? 'checked' : '') : '' }}>
                     <label class="custom-control-label"
-                           for="not_available">{{ __('messages.candidate.not_immediate_available') }}</label>
+                        for="not_available">{{ __('messages.candidate.not_immediate_available') }}</label>
                 </div>
             </div>
         </div>
