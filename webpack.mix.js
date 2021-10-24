@@ -216,6 +216,10 @@ mix.js('resources/assets/js/custom/custom.js',
         'public/assets/js/blog_categories/blog_categories.js').
     js('resources/assets/js/blogs/blogs.js',
         'public/assets/js/blogs/blogs.js').
+    js('resources/assets/js/quizzes/quizzes.js',
+        'public/assets/js/quizzes/quizzes.js').
+    js('resources/assets/js/quizzes/questions.js',
+        'public/assets/js/quizzes/questions.js').
     js('resources/assets/js/blogs/create-edit.js',
         'public/assets/js/blogs/create-edit.js').
     js('resources/assets/js/inquires/inquires.js',
