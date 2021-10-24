@@ -3,7 +3,7 @@
     <tr>
         <th scope="col" class="col-4">{{ __('messages.quizzes.question_text') }}</th>
         <th scope="col" class="col-5">{{ __('messages.quizzes.question_answers') }}</th>
-        <th scope="col" class="col-1">{{ __('messages.quizzes.question_grade') }}</th>
+        <th scope="col" class="col-1">{{ __('messages.quizzes.answer_weight') }}</th>
         <th scope="col" class="col-1">{{ __('messages.quizzes.is_optional') }}</th>
         <th scope="col" class="col-1"></th>
     </tr>
@@ -13,15 +13,23 @@
         <tr>
         <td class="regular-color">{{ $question->question_text }}</td>
         <td>
-            @if (!empty($question->ListOfAnswers))
-                @foreach ($question->ListOfAnswers as $answer)
+            @if (!empty($question->question_answers))
+                @foreach ($question->question_answers as $answer)
                     <div class="mt-2">
-                    <span class="{{ $answer->is_true_answer == 1 ? 'is-correct' : 'regular-color'}}"> {{ $answer->answer_text }} <span>
+                        <span class="regular-color"> {{ $answer->answer_text }} <span>
                     <div>
                 @endforeach
             @endif
         </td>
-        <td class="regular-color">{{ $question->question_weight }} marks</td>
+        <td class="regular-color">
+            @if (!empty($question->question_answers))
+                @foreach ($question->question_answers as $answer)
+                    <div class="mt-2">
+                        <span class="regular-color"> {{ $answer->answer_weight }} <span>
+                    <div>
+                @endforeach
+            @endif
+        </td>
         <td>
             @if($question->is_optional)
                 <i class="fas fa-check-circle text-success check"></i>

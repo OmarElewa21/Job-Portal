@@ -12,6 +12,18 @@
                 <div class="alert alert-danger d-none" id="validationErrorsBox"></div>
                 <div class="row">
                     <div class="form-group col-sm-12">
+                        {!! Form::label('category', __('messages.quizzes.category').':') !!}<span class="text-danger">*</span>
+                        <div class="d-flex justify-content-around">
+                            <select name="category" class="form-control col-sm-8" id='category_name_select_input'>
+                                @foreach ($categories as $category)
+                                    <option value="{{$category->name}}">{{$category->name}}</option>
+                                @endforeach
+                            </select>
+                            {!! Form::text('other', null, ['id'=>'category_name_text_input','class' => 'form-control col-sm-8 d-none']) !!}
+                            <button class="btn btn-primary btn-sm mb-1" type="button" onclick="addCategory(this)">Add New Category</button>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
                         {!! Form::label('name', __('messages.quizzes.name').':') !!}<span class="text-danger">*</span>
                         {!! Form::text('name', null, ['id'=>'name','class' => 'form-control','required']) !!}
                     </div>

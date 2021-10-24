@@ -15,9 +15,11 @@ class CreateQuizzesTable extends Migration
     {
         Schema::create('quizzes', function (Blueprint $table) {
             $table->id();
-            $table->text("quiz_name");
-            $table->text("quiz_description")->nullable();
+            $table->foreignId('category_id')->constrained('quiz_categories');
+            $table->text("name");
+            $table->text("description")->nullable();
             $table->foreignId('created_by')->constrained('users');
+            $table->softDeletes($column = 'deleted_at', $precision = 0);
             $table->timestamps();
         });
     }

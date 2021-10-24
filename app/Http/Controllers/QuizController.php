@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\QuizQuestion;
 use App\Models\QuizQuestionAnswer;
 use App\Models\QuizAssignedTo;
+use App\Models\QuizCategory;
 use Illuminate\Support\Facades\View;
 
 class QuizController extends AppBaseController
@@ -23,10 +24,13 @@ class QuizController extends AppBaseController
     {
         $ListofQuizzes = DB::table('quizzes')
                         ->join('users', 'quizzes.created_by', '=', 'users.id')
-                        ->select('quizzes.*', 'users.email')
+                        ->join('quiz_categories as qc', 'qc.id', '=', 'quizzes.category_id')
+                        ->select('quizzes.*', 'users.email', 'qc.name as category')
                         ->get();
+        $categories = DB::table('quiz_categories')->get();
         return view('quizzes.index', [
-            'ListOfQuizzes' => $ListofQuizzes
+            'ListOfQuizzes' => $ListofQuizzes,
+            'categories'    => $categories
         ]);
     }
 
@@ -34,16 +38,21 @@ class QuizController extends AppBaseController
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return back or error
      */
     public function store(Request $request)
     {
+        if(count(QuizCategory::where('name', $request->category)->get()) == 0){
+            QuizCategory::create(['name' => $request->category])->save();
+        }
+        $category = QuizCategory::where('name', $request->category)->first();
         $newQuiz = new Quiz();
         try{
-            $newQuiz-> fill([
-                'quiz_name' => $request->name,
-                'quiz_description' => $request->description,
-                'created_by' => Auth::id()
+            $newQuiz->fill([
+                'name' => $request->name,
+                'description' => $request->description,
+                'created_by' => Auth::id(),
+                'category_id' => $category->id
             ])->save();
             return back();
         }
@@ -61,11 +70,7 @@ class QuizController extends AppBaseController
     public function show($id)
     {
         $quiz = Quiz::find($id);
-        $listOfQuizQuestion = QuizQuestion::where('quiz_id', $id)->get();
-        foreach($listOfQuizQuestion as $question){
-            $answers = QuizQuestionAnswer::where('quiz_question_id', $question->id)->get();
-            $question['ListOfAnswers'] = $answers;
-        }
+        $listOfQuizQuestion = QuizQuestion::where('quiz_id', $id)->with('question_answers')->get();
         return view('quizzes.questions.index', [
             'questionsList' => $listOfQuizQuestion,
             'quiz_name' => $quiz->quiz_name,
@@ -81,8 +86,12 @@ class QuizController extends AppBaseController
      */
     public function edit($id)
     {
-        $quiz = Quiz::find($id);
-        return View::make('quizzes.edit_modal', ['quiz' => $quiz]);
+        $quiz = DB::table('quizzes as q')->where('q.id', $id)
+                    ->join('quiz_categories as qc', 'q.category_id', '=', 'qc.id')
+                    ->select('q.*', 'qc.name as category_name')->get();
+
+        $categories = QuizCategory::all();
+        return View::make('quizzes.edit_modal', ['quiz' => json_decode($quiz, true)[0], 'categories' => $categories]);
     }
 
     /**
@@ -94,11 +103,17 @@ class QuizController extends AppBaseController
      */
     public function update(Request $request, $id)
     {
+        if(count(QuizCategory::where('name', $request->category)->get()) == 0){
+            QuizCategory::create(['name' => $request->category])->save();
+        }
+        $category = QuizCategory::where('name', $request->category)->first();
+
         $quiz = Quiz::find($id);
         try{
             $quiz-> update([
-                'quiz_name' => $request->name,
-                'quiz_description' => $request->description,
+                'name'         => $request->name,
+                'description'  => $request->description,
+                'category_id'  => $category->id,
             ]);
             return back();
         }

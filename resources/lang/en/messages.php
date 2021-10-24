@@ -1111,6 +1111,9 @@ return [
         'select_to_send' => 'Select to send',
 
         'pending_quizzes' => 'Pending quizzes',
-        'taken_quizzes'   => 'Taken quizzes'  
+        'taken_quizzes'   => 'Taken quizzes',
+
+        'category'        => 'Category',
+        'answer_weight'   => 'Answer weight'
     ],
 ];

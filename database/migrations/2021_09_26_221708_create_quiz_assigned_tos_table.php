@@ -16,6 +16,7 @@ class CreateQuizAssignedTosTable extends Migration
         Schema::create('quiz_assigned_tos', function (Blueprint $table) {
             $table->foreignId('quiz_id')->constrained('quizzes');
             $table->foreignId('user_id')->constrained('users');
+            $table->boolean('is_pending')->default(1);
             $table->timestamps();
         });
     }
