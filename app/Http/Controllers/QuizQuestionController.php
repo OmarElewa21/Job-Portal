@@ -59,25 +59,23 @@ class QuizQuestionController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\QuizQuestion  $quizQuestion
-     * @return \Illuminate\Http\Response
+     * @return back
      */
     public function update(Request $request)
     {
         $question = QuizQuestion::find($request->query('id'));
-        QuizQuestionAnswer::where('quiz_question_id', $request->query('id'))->delete();
+        QuizQuestionAnswer::where('quiz_question_id', $question->id)->delete();
         try{
             $question->update([
+                'quiz_id' => $request->query('id'),
                 'question_text' => $request->question_text,
-                'question_weight' => $request->question_weight,
-                'is_one_choice_answer' => $request->is_true_answer != null ? (count($request->is_true_answer) > 1 ? 0 : 1) : 1,
-                'is_optional' => $request->is_optional == 'on' ? 1 : 0
+                'checkbox' => $request->is_checkbox == 'on' ? 1 : 0
             ]);
             foreach($request->answer_text as $index=>$value){
                 QuizQuestionAnswer::create([
-                    'quiz_question_id' => $request->query('id'),
+                    'quiz_question_id' => $question->id,
                     'answer_text' => $value,
-                    'is_true_answer' => $request->is_true_answer != null ? (array_key_exists($index, $request->is_true_answer) ? 1 : 0) : 0
+                    'answer_weight' => $request->answer_weight[$index],
                 ])->save();
             }
             return back();

@@ -39,7 +39,7 @@
 
                 <td>
                     <div class="d-flex">
-                        <a class="pl-1 pr-1 m-auto editQuizModal" href="#" title="Edit" onclick="questions.edit('{{$question->id}}')">
+                        <a class="pl-1 pr-1 m-auto editQuizModal {{ $disable_delete ? 'd-none' : '' }}" href="#" title="Edit" onclick="questions.edit('{{$question->id}}')">
                             <i class="fas fa-edit details"></i>
                         </a>
                         <a class="pl-2 m-auto {{ $disable_delete ? 'd-none' : '' }}" href="#" title="Delete" onclick="questions.delete('{{$question->id}}')">

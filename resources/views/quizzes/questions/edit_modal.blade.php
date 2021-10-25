@@ -16,7 +16,6 @@
                             <label class="option-label regular-color"> Can accept multiple answers </label> <br>
                         </div>
                     </div>
-
                     <div class="form-group col-sm-12 mt-3">
                         {!! Form::label('name', __('messages.quizzes.question_text').':', ['class' => 'regular-color']) !!}<span class="text-danger">*</span><br>
                         <textarea id= 'question_text' name='question_text' class="text-area ml-2" rows="1" required>{{$question->question_text}}</textarea><br>
@@ -28,21 +27,17 @@
                             <label class="regular-color">Answers</label>
                             <label class="regular-color mr-1">Points</label>
                         </div>
-                        
                         @foreach($question->answers as $index=>$answer)
-
-                        <div class="d-flex answer-box_edit d-flex justify-content-between align-items-center">
-                            <div class="answer-subbox d-flex justify-content-around align-items-center">
-                                <i class="fas fa-minus-circle answer-fas text-danger" onclick="remove_answer_foredit(this)"></i>
-                                <textarea name="answer_text[]" class="text-area mb-1" rows="1" required> {{$answer->answer_text}} </textarea>
-                                <i class="fas fa-plus-circle i-add answer-fas text-success" onclick="add_answer_foredit()"></i>
+                            <div class="d-flex answer-box_edit d-flex justify-content-between align-items-center">
+                                <div class="answer-subbox d-flex justify-content-around align-items-center">
+                                    <i class="fas fa-minus-circle answer-fas text-danger" onclick="remove_answer_foredit(this)"></i>
+                                    <textarea name="answer_text[]" class="text-area mb-1" rows="1" required> {{$answer->answer_text}} </textarea>
+                                    <i class="fas fa-plus-circle i-add answer-fas text-success" onclick="add_answer_foredit()"></i>
+                                </div>
+                                <input type="number" class="answer_weight-foredit" name="answer_weight[{{$index}}]" size="3" value="{{$answer->answer_weight}}" required>
                             </div>
-                            <input type="number" class="answer_weight-foredit" name="answer_weight[{{$index}}]" size="3" value="{{$answer->answer_weight}}" required>
-                        </div>
                         @endforeach
-
                     </div>
-
                     <div class="text-right">
                         {{ Form::button(__('messages.common.save'), ['type'=>'submit','class' => 'btn btn-primary mr-1','id'=>'btnSave','data-loading-text'=>"<span class='spinner-border spinner-border-sm'></span> Processing..."]) }}
                         <button type="button" id="btnCancel" class="btn btn-light"
