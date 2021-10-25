@@ -34,12 +34,9 @@
                 <div class="mr-5 d-flex">
                     <h3 class="font-weight-bold">Quiz# </h3> <span class="h3 ml-2">{{$quiz_name}}</span>
                 </div>
-                <div class="d-flex">
-                    <p class="font-weight-bold mr-1"> Total points: </p> <span>{{$total_points}}</span>
-                </div>
             </div>
     
-            {{ Form::open(['id' => 'take-quiz', 'route' => ['take-quiz.store', 'total_points' => $total_points, 'quiz_id' => $quiz_id]])}}
+            {{ Form::open(['id' => 'take-quiz', 'route' => ['take-quiz.store', 'quiz_id' => $quiz_id]])}}
             <section class="w-100">
                     
                 @foreach($questions as $index=>$question)
@@ -47,23 +44,20 @@
                     <div class="w-100 d-flex justify-content-between mb-5">
                         <div>
                             <div class="mb-3">
-                                <span class="font-weight-bold mr-1">{{$index+1}}.</span> <span style="{{ $question->is_optional == 1 ? "color:green;" : '' }}">{{$question->question_text}} {{ $question->is_optional == 1 ? "(Bonus+)" : "" }}<span>
+                                <span class="font-weight-bold mr-1">{{$index+1}}.</span> <span style="{{ $question->is_optional == 1 ? "color:green;" : '' }}">{{$question->question_text}}<span>
                             </div>
         
                             <div>
                                 <ul>
                                     @foreach ($question->question_answers as $answer)
                                     <div class="d-flex">
-                                        <input name="{{$question->is_one_choice_answer == 1 ? 'question[' . $question->id .']' : 'question_multi_answers[' . $answer->id . ']'}}" value="{{$answer->id}}" type="{{ $question->is_one_choice_answer == 1 ? 'radio' : 'checkbox'}}" class="mb-1" style="font-size:large; line-height: 1.4; padding:20px;">
+                                        <input name="{{'question[' . $answer->id . ']'}}" value="{{$answer->id}}" type="{{ $question->checkbox == 0 ? 'radio' : 'checkbox'}}" class="mb-1" style="font-size:large; line-height: 1.4; padding:20px;">
                                         <li class="ml-3 mb-2"> {{ $answer->answer_text }} </li>
                                     </div>
                                     @endforeach
                                 </ul>
                             </div>
                         </div>
-                        <aside>
-                            <p style="background-color:#FCFFA6;"> <span> {{$question->is_optional == 1 ? "+" : ""}} </span> {{ round($question->question_weight) }} <span> points </span></p>
-                        </aside>
                     </div>
                 @endforeach
                 <div class="text-center mb-5">

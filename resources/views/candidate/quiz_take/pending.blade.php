@@ -28,7 +28,7 @@
                     <div class="mb-4 d-flex justify-content-between align-items-stretch">
                         <div>
                             <span class="quiz_name h5 mr-3"> Quiz {{$index+1}}# </span>
-                            <span class="quiz_name h5 font-weight-bold"> {{$quiz->quiz_name}} </span>
+                            <span class="quiz_name h5 font-weight-bold"> {{$quiz->name}} </span>
                         </div>
                         <div>
                             <a href="{{ url('/candidate/take-quiz/' . $quiz->id) }}">

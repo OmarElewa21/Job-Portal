@@ -21,46 +21,18 @@ class QuizTakeController extends Controller
      * @return score number
      */
     private function calculate_score($user_id, $quiz_id){
-        $score = 0;
-        $quiz_questions = Quiz::find($quiz_id)->quiz_questions();
-        $total_quiz_points = $quiz_questions->where('is_optional', 0)->sum('question_weight');
-        $user_answers = DB::table('quizzes as q')->where('q.id', $quiz_id)
-                        ->join('quiz_questions as qq', 'q.id', '=', 'qq.quiz_id')
-                        ->join('quiz_question_answers as qqa', 'qq.id', '=', 'qqa.quiz_question_id')
-                        ->join('quiz_takes as qt', 'qqa.id', '=', 'qt.answer_id')
-                        ->select('qt.*', 'qq.*', 'qqa.*')
-                        ->where('qt.user_id', $user_id)->get();
-
-        $answer_id_list = [];
-        foreach($user_answers as $answer){
-            if($answer->is_one_choice_answer == 1){
-                if($answer->is_true_answer == 1){
-                    $score += $answer->question_weight;
-                }
-            }
-
-            else{
-                if(!array_key_exists(strval($answer->quiz_question_id), $answer_id_list)){
-                    $answer_id_list[strval($answer->quiz_question_id)] = 0;
-                }
-
-                if($answer->is_true_answer == 1){
-                    $answer_id_list[strval($answer->quiz_question_id)] += $answer->question_weight/QuizQuestionAnswer::where('quiz_question_id', $answer->quiz_question_id)->count('quiz_question_id');
-                }
-                else{
-                    if($answer_id_list[strval($answer->quiz_question_id)] > 0){
-                        $answer_id_list[strval($answer->quiz_question_id)] -= $answer->question_weight/QuizQuestionAnswer::where('quiz_question_id', $answer->quiz_question_id)->count('quiz_question_id');
-                    }
-                }
-            }
-        }
-        foreach($answer_id_list as $q_score){
-            $score += $q_score;
-        }
+        $score = DB::table('quiz_takes as qt')->where('user_id', $user_id)->where('quiz_id', $quiz_id)
+                        ->join('quiz_question_answers as qqa', 'qt.answer_id', 'qqa.id')
+                        ->select('qqa.id', 'qqa.answer_weight')
+                        ->sum('qqa.answer_weight'); 
         
+        $total_points = DB::table('quiz_questions as qq')->where('quiz_id', $quiz_id)
+                            ->join('quiz_question_answers as qqa', 'qq.id', 'qqa.quiz_question_id')
+                            ->select('qqa.answer_weight')
+                            ->sum('qqa.answer_weight');
         return [
             "score" => $score,
-            "score_percentage" => strval($score / $total_quiz_points * 100) . '%'
+            "score_percentage" => $score / $total_points * 100
         ];
     }
 
@@ -109,24 +81,14 @@ class QuizTakeController extends Controller
                 if(count(QuizTake::where('user_id', $user_id)->where('answer_id', $answer)->get()) == 0){
                     $quizTake-> create([
                         'user_id' => $user_id,
-                        'answer_id' => $answer,
+                        'quiz_id' => $request->input(['quiz_id']),
+                        'answer_id' => $answer
                     ]);
                 }
             }
         }
-        elseif($request->question_multi_answers == null){
+        else{
             return redirect()->back()->with('status', 'No answers has been selected');
-        }
-
-        if($request->question_multi_answers != null){
-            foreach($request->question_multi_answers as $answer){
-                if(count(QuizTake::where('user_id', $user_id)->where('answer_id', $answer)->get()) == 0){
-                    $quizTake-> create([
-                        'user_id' => $user_id,
-                        'answer_id' => $answer,
-                    ]);
-                }
-            }
         }
 
         $score = $this->calculate_score($user_id, $request->input(['quiz_id'])+0);
@@ -150,12 +112,10 @@ class QuizTakeController extends Controller
     public function show($quiz_id)
     {
         $quiz_questions = QuizQuestion::where('quiz_id', $quiz_id)->with('question_answers')->get();
-        $total_points = $quiz_questions->where('is_optional', 0)->sum('question_weight');
         return view('candidate.quiz_take.load', [
             'questions' => $quiz_questions,
             'quiz_id' => $quiz_id,
             'quiz_name' => Quiz::find($quiz_id)->quiz_name,
-            'total_points' => $total_points,
         ]);
     }
 }

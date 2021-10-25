@@ -73,7 +73,7 @@ class QuizController extends AppBaseController
         $listOfQuizQuestion = QuizQuestion::where('quiz_id', $id)->with('question_answers')->get();
         return view('quizzes.questions.index', [
             'questionsList' => $listOfQuizQuestion,
-            'quiz_name' => $quiz->quiz_name,
+            'quiz_name' => $quiz->name,
             'quiz_id' => $quiz->id
         ]);
     }

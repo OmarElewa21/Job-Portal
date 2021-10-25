@@ -12,7 +12,8 @@ class QuizTake extends Model
 
     protected $fillable = [
         'user_id',
-        'answer_id',
+        'quiz_id',
+        'answer_id'
     ];
 
     public function answer(){

@@ -19,13 +19,13 @@
 
                 <td class="regular-color">
                     @foreach ($question->question_answers as $answer)
-                        {{ $answer->answer_text }} </br></br>
+                        <div class="pt-3">{{ $answer->answer_text }} </div>
                     @endforeach
                 </td>
 
                 <td class="regular-color">
                     @foreach ($question->question_answers as $answer)
-                        {{ $answer->answer_weight }} </br></br>
+                    <div class="pt-3">{{ $answer->answer_weight }} </div>
                     @endforeach
                 </td>
 
