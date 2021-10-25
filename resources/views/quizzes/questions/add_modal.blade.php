@@ -37,7 +37,7 @@
                                     <textarea name="answer_text[]" class="text-area mb-1" rows="1" required></textarea>
                                     <i class="fas fa-plus-circle answer-fas text-success" onclick="add_answer()"></i>
                                 </div>
-                                <input type="number" class="answer_weight" name="answer_weight[]" size="3" required>
+                                <input type="text" class="answer_weight" name="answer_weight[]" size="3" required>
                             </div>
 
                             <div class="d-flex answer-box d-flex justify-content-between align-items-center mt-2">
@@ -46,7 +46,7 @@
                                     <textarea name="answer_text[]" class="text-area mb-1" rows="1" required></textarea>
                                     <i class="fas fa-plus-circle answer-fas last_answer text-success" onclick="add_answer()"></i>
                                 </div>
-                                <input type="number" class="answer_weight" name="answer_weight[]" size="3" required>
+                                <input type="text" class="answer_weight" name="answer_weight[]" size="3" required>
                             </div>
                         </div>
 

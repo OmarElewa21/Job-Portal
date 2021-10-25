@@ -34,7 +34,7 @@
                                     <textarea name="answer_text[]" class="text-area mb-1" rows="1" required> {{$answer->answer_text}} </textarea>
                                     <i class="fas fa-plus-circle i-add answer-fas text-success" onclick="add_answer_foredit()"></i>
                                 </div>
-                                <input type="number" class="answer_weight-foredit" name="answer_weight[{{$index}}]" size="3" value="{{$answer->answer_weight}}" required>
+                                <input type="text" class="answer_weight-foredit" name="answer_weight[{{$index}}]" size="3" value="{{$answer->answer_weight}}" required>
                             </div>
                         @endforeach
                     </div>
