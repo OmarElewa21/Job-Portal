@@ -115,7 +115,7 @@ class QuizTakeController extends Controller
         return view('candidate.quiz_take.load', [
             'questions' => $quiz_questions,
             'quiz_id' => $quiz_id,
-            'quiz_name' => Quiz::find($quiz_id)->quiz_name,
+            'quiz_name' => Quiz::find($quiz_id)->name,
         ]);
     }
 }

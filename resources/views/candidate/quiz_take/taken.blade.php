@@ -31,8 +31,8 @@
                                 <span class="quiz_name h5 font-weight-bold"> {{$quiz->name}} </span>
                             </div>
                             <div>
-                                <span class="quiz_name h5"> Grade: </span>
-                                <span class="quiz_name h5 font-weight-bold"> {{$quiz->quiz_grade}} </span>
+                                <span class="quiz_name h5"> Score: </span>
+                                <span class="quiz_name h5 font-weight-bold"> {{$quiz->quiz_grade}} Points</span>
                             </div>
                         </div>
                     @endforeach
