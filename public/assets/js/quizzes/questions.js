@@ -3,34 +3,34 @@
 */
 function settings_adjust(){
     let last_answer = document.getElementsByClassName('fa-plus-circle');
-    let is_true_checkbox = document.getElementsByClassName('is-true');
+    let answer_weight = document.getElementsByClassName('answer_weight');
 
     for(let i=0; i<last_answer.length; i++){
         last_answer[i].classList.remove('last_answer');
         if(i == last_answer.length - 1){
             last_answer[i].classList.add('last_answer');
         }
-        is_true_checkbox[i].setAttribute('name', 'is_true_answer[' + i + ']')
+        answer_weight[i].setAttribute('name', 'answer_weight[' + i + ']')
     }
 }
 
 function settings_adjust_foredit(){
     let last_answer = document.getElementsByClassName('i-add');
-    let is_true_checkbox = document.getElementsByClassName('is-true-foredit');
+    let answer_weight = document.getElementsByClassName('answer_weight-foredit');
 
     for(let i=0; i<last_answer.length; i++){
         last_answer[i].classList.remove('last_answer');
         if(i == last_answer.length - 1){
             last_answer[i].classList.add('last_answer');
         }
-        is_true_checkbox[i].setAttribute('name', 'is_true_answer[' + i + ']')
+        answer_weight[i].setAttribute('name', 'answer_weight[' + i + ']')
     }
 }
 
 function add_answer(){
     let answer_element = $('.answer-box').first().clone(true);
     answer_element.find('.text-area').val("");
-    answer_element.find('.is-true').prop('checked', false);
+    answer_element.find('.answer_weight').val("");
     answer_element.find('.fa-plus-circle').addClass('last_answer')
     $('#answers').append(answer_element);
     settings_adjust()
@@ -49,7 +49,7 @@ function remove_answer(element){
 function add_answer_foredit(){
     let answer_element = $('.answer-box_edit').first().clone(true);
     answer_element.find('.text-area').val("");
-    answer_element.find('.is-true').prop('checked', false);
+    answer_element.find('.answer_weight-foredit').val("");
     answer_element.find('.fa-plus-circle').addClass('last_answer')
     $('#answers_edit').append(answer_element);
     settings_adjust_foredit()
@@ -70,8 +70,8 @@ let tableName = '#questionsTbl';
 
 $(tableName).DataTable({
     columnDefs: [
-        {bSortable: false, targets: [1,2]} 
-      ]
+        {bSortable: false, targets: [1,2,3,4]} 
+    ],
 });
 
 $('.addQuestionModal').click(function () {

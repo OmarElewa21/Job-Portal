@@ -32,7 +32,15 @@ function editCategory(elem){
     }
 }
 
-$('#quizzesTbl').DataTable();
+$('#quizzesTbl').DataTable({
+    order: [[2, 'asc']],
+        rowGroup: {
+            dataSrc: 2
+        },
+    columnDefs: [
+        {bSortable: false, targets: [1, 3, 4, 5]} 
+        ]
+});
 
 $('#load-candidates-table').DataTable({
     paging: false,

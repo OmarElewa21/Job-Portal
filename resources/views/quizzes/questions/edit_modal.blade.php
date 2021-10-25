@@ -12,12 +12,8 @@
                 <div class="row">
                     <div class="option-box w-100 d-flex justify-content-between">
                         <div class="options">
-                            <input type="checkbox" name="is_optional" class="ml-4 mr-1" {{$question->is_optional == 1 ? 'checked' : ''}}>
-                            <label class="option-label regular-color"> Is an optional / bonus question </label> <br>
-                        </div>
-                        <div class="grade-box mr-4">
-                            <label class="option-label regular-color"> Question points : </label>
-                            <input type="number" name="question_weight" class="ml-2" size="4" value="{{$question->question_weight}}" required>
+                            <input type="checkbox" name="is_checkbox" class="ml-4 mr-1">
+                            <label class="option-label regular-color"> Can accept multiple answers </label> <br>
                         </div>
                     </div>
 
@@ -30,7 +26,7 @@
                         <div class="answer-labels w-100 d-flex justify-content-between">
                             <label></label>
                             <label class="regular-color">Answers</label>
-                            <label class="regular-color">Is correct</label>
+                            <label class="regular-color mr-1">Points</label>
                         </div>
                         
                         @foreach($question->answers as $index=>$answer)
@@ -41,9 +37,8 @@
                                 <textarea name="answer_text[]" class="text-area mb-1" rows="1" required> {{$answer->answer_text}} </textarea>
                                 <i class="fas fa-plus-circle i-add answer-fas text-success" onclick="add_answer_foredit()"></i>
                             </div>
-                            <input type="checkbox" name="is_true_answer[{{$index}}]" class="mr-4 is-true is-true-foredit" {{$answer->is_true_answer == 1 ? 'checked' : ''}}>
+                            <input type="number" class="answer_weight-foredit" name="answer_weight[{{$index}}]" size="3" value="{{$answer->answer_weight}}" required>
                         </div>
-
                         @endforeach
 
                     </div>

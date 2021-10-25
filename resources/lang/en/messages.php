@@ -1101,7 +1101,7 @@ return [
         'question_answers' => 'Answers',
         'question_grade' => 'Question Grade',
         'is_multiple_choice' => 'Has Multiple Correct Answers',
-        'is_optional' => 'Is Optional',
+        'is_checkbox' => 'Is Checkbox',
         'new_question' => 'New Question',
         'answers' => 'Answers',
         'which_candidates' => 'Select Candidates',

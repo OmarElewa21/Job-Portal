@@ -13,12 +13,8 @@
                     <div class="row">
                         <div class="option-box w-100 d-flex justify-content-between">
                             <div class="options">
-                                <input type="checkbox" name="is_optional" class="ml-4 mr-1">
-                                <label class="option-label regular-color"> Is an optional / bonus question </label> <br>
-                            </div>
-                            <div class="grade-box mr-4">
-                                <label class="option-label regular-color"> Question points : </label>
-                                <input type="number" name="question_weight" class="ml-2" size="4" required>
+                                <input type="checkbox" name="is_checkbox" class="ml-4 mr-1">
+                                <label class="option-label regular-color"> Can accept multiple answers </label> <br>
                             </div>
                         </div>
 
@@ -31,7 +27,7 @@
                             <div class="answer-labels w-100 d-flex justify-content-between">
                                 <label></label>
                                 <label class="regular-color">Answers</label>
-                                <label class="regular-color">Is correct</label>
+                                <label class="regular-color mr-1">Points</label>
                             </div>
                             
                             
@@ -41,7 +37,7 @@
                                     <textarea name="answer_text[]" class="text-area mb-1" rows="1" required></textarea>
                                     <i class="fas fa-plus-circle answer-fas text-success" onclick="add_answer()"></i>
                                 </div>
-                                <input type="checkbox" name="is_true_answer[0]" class="mr-4 is-true">
+                                <input type="number" class="answer_weight" name="answer_weight[]" size="3" required>
                             </div>
 
                             <div class="d-flex answer-box d-flex justify-content-between align-items-center mt-2">
@@ -50,7 +46,7 @@
                                     <textarea name="answer_text[]" class="text-area mb-1" rows="1" required></textarea>
                                     <i class="fas fa-plus-circle answer-fas last_answer text-success" onclick="add_answer()"></i>
                                 </div>
-                                <input type="checkbox" name="is_true_answer[1]" class="is-true answer_2 mr-4">
+                                <input type="number" class="answer_weight" name="answer_weight[]" size="3" required>
                             </div>
                         </div>
 
