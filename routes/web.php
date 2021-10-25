@@ -808,4 +808,3 @@ Route::get('/upgrade-to-v8-1-0', function () {
     \Illuminate\Support\Facades\Artisan::call('db:seed',
         ['--class' => 'FooterLogoSeeder']);
 });
-// Route::get('/sss/{ss}/{s}', [QuizTakeController::class, 'calculate_score']);

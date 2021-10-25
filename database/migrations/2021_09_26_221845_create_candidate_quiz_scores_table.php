@@ -17,6 +17,8 @@ class CreateCandidateQuizScoresTable extends Migration
             $table->foreignId('quiz_id')->constrained('quizzes');
             $table->foreignId('user_id')->constrained('users');
             $table->float('quiz_grade');
+            $table->float('score_percentage');
+            $table->softDeletes($column = 'deleted_at', $precision = 0);
             $table->timestamps();
         });
     }

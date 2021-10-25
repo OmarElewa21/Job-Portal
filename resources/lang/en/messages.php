@@ -1101,7 +1101,7 @@ return [
         'question_answers' => 'Answers',
         'question_grade' => 'Question Grade',
         'is_multiple_choice' => 'Has Multiple Correct Answers',
-        'is_optional' => 'Is Optional',
+        'is_checkbox' => 'Is checkbox',
         'new_question' => 'New Question',
         'answers' => 'Answers',
         'which_candidates' => 'Select Candidates',
@@ -1111,6 +1111,9 @@ return [
         'select_to_send' => 'Select to send',
 
         'pending_quizzes' => 'Pending quizzes',
-        'taken_quizzes'   => 'Taken quizzes'  
+        'taken_quizzes'   => 'Taken quizzes',
+
+        'category'        => 'Category',
+        'answer_weight'   => 'Answer weight'
     ],
 ];

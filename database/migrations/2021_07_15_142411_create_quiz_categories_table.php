@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddScorePercentageToCandidateQuizScoreTable extends Migration
+class CreateQuizCategoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class AddScorePercentageToCandidateQuizScoreTable extends Migration
      */
     public function up()
     {
-        Schema::table('candidate_quiz_scores', function (Blueprint $table) {
-            $table->string('score_percentage');
+        Schema::create('quiz_categories', function (Blueprint $table) {
+            $table->id();
+            $table->text("name");
+            $table->softDeletes($column = 'deleted_at', $precision = 0);
+            $table->timestamps();
         });
     }
 
@@ -25,8 +28,6 @@ class AddScorePercentageToCandidateQuizScoreTable extends Migration
      */
     public function down()
     {
-        Schema::table('candidate_quiz_scores', function (Blueprint $table) {
-            $table->dropColumn('score_percentage');
-        });
+        Schema::dropIfExists('quiz_categories');
     }
 }

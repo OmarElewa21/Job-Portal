@@ -17,9 +17,8 @@ class CreateQuizQuestionsTable extends Migration
             $table->id();
             $table->foreignId('quiz_id')->constrained('quizzes');
             $table->text('question_text');
-            $table->float('question_weight');
-            $table->boolean('is_one_choice_answer')->default(1);
-            $table->boolean('is_optional')->default(0);
+            $table->boolean('checkbox')->default(0);
+            $table->softDeletes($column = 'deleted_at', $precision = 0);
             $table->timestamps();
         });
     }

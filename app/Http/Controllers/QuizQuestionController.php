@@ -18,23 +18,21 @@ class QuizQuestionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {   
+    {
         $newQuestion = new QuizQuestion();
         $newAnswer = new QuizQuestionAnswer();
         try{
             $newQuestion->fill([
                 'quiz_id' => $request->query('id'),
                 'question_text' => $request->question_text,
-                'question_weight' => $request->question_weight,
-                'is_one_choice_answer' => $request->is_true_answer != null ? (count($request->is_true_answer) > 1 ? 0 : 1) : 1,
-                'is_optional' => $request->is_optional == 'on' ? 1 : 0
+                'checkbox' => $request->is_checkbox == 'on' ? 1 : 0
             ])->save();
-            
+
             foreach($request->answer_text as $index=>$value){
                 $newAnswer->create([
                     'quiz_question_id' => $newQuestion->id,
                     'answer_text' => $value,
-                    'is_true_answer' => $request->is_true_answer != null ? (array_key_exists($index, $request->is_true_answer) ? 1 : 0) : 0
+                    'answer_weight' => $request->answer_weight[$index],
                 ])->save();
             }
             return back();

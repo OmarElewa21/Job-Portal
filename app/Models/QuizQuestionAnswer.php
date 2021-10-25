@@ -11,7 +11,7 @@ class QuizQuestionAnswer extends Model
     protected $fillable = [
         'quiz_question_id',
         'answer_text',
-        'is_true_answer'
+        'answer_weight'
     ];
 
     public function question()

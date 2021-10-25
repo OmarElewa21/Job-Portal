@@ -5,6 +5,7 @@
 @push('css')
     <link href="{{ asset('assets/css/jquery.dataTables.min.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ asset('assets/css/jquery-confirm.min.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('assets/css/rowGroup.dataTables.min.css') }}" rel="stylesheet">
 @endpush
 
 @section('content')
@@ -36,5 +37,6 @@
     </script>
     <script src="{{asset('assets/js/jquery-confirm.min.js')}}"></script>
     <script src="{{asset('assets/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{asset('assets/js/dataTables.rowGroup.min.js')}}"></script>
     <script src="{{mix('assets/js/quizzes/quizzes.js')}}?<?= time() ?>"></script>
 @endpush

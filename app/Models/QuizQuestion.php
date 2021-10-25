@@ -11,9 +11,7 @@ class QuizQuestion extends Model
     protected $fillable = [
         'quiz_id',
         'question_text',
-        'question_weight',
-        'is_one_choice_answer',
-        'is_optional'
+        'checkbox'
     ];
 
     public function question_answers(){

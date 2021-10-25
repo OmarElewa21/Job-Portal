@@ -17,7 +17,8 @@ class CreateQuizQuestionAnswersTable extends Migration
             $table->id();
             $table->foreignId('quiz_question_id')->constrained('quiz_questions');
             $table->text("answer_text");
-            $table->boolean("is_true_answer");
+            $table->float("answer_weight");
+            $table->softDeletes($column = 'deleted_at', $precision = 0);
             $table->timestamps();
         });
     }
