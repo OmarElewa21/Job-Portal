@@ -11,6 +11,7 @@ use App\Models\QuizQuestion;
 use App\Models\QuizQuestionAnswer;
 use App\Models\QuizAssignedTo;
 use App\Models\QuizCategory;
+use App\Models\QuizTake;
 use Illuminate\Support\Facades\View;
 
 class QuizController extends AppBaseController
@@ -74,7 +75,8 @@ class QuizController extends AppBaseController
         return view('quizzes.questions.index', [
             'questionsList' => $listOfQuizQuestion,
             'quiz_name' => $quiz->name,
-            'quiz_id' => $quiz->id
+            'quiz_id' => $quiz->id,
+            'disable_delete' => $quiz->disable_delete
         ]);
     }
 
@@ -151,10 +153,17 @@ class QuizController extends AppBaseController
                         ->get();
         foreach($candidates as $candidate){
             if(count(QuizAssignedTo::where('quiz_id', $quiz_id)->where('user_id', $candidate->id)->get()) != 0){
+                if(QuizAssignedTo::where('quiz_id', $quiz_id)->where('user_id', $candidate->id)->first()->is_pending == 0){
+                    $candidate->select = 0;
+                }
+                else{
+                    $candidate->select = 1;
+                }
                 $candidate->checked = 1;
             }
             else{
                 $candidate->checked = 0;
+                $candidate->select = 1;
             }
         }
         return View::make('quizzes.load_candidates', ['candidates' => $candidates, 'quiz_id' => $quiz_id]);
@@ -164,7 +173,7 @@ class QuizController extends AppBaseController
     /**
      * store the assigned quiz to the assigned candidates
      *
-     */
+    */
     public function assign_quiz_store(Request $request){
         QuizAssignedTo::where('quiz_id', $request->input('quiz_id'))->delete();
         if($request->list != null){
@@ -174,6 +183,12 @@ class QuizController extends AppBaseController
                     'user_id' => $key
                 ]);
             }
+        }
+        if(count(QuizAssignedTo::where('quiz_id', $request->input('quiz_id'))->get()) != 0){
+            Quiz::where('id', $request->input('quiz_id'))->update(['disable_delete' => 1]);
+        }
+        else{
+            Quiz::where('id', $request->input('quiz_id'))->update(['disable_delete' => 0]);
         }
         
         return back();

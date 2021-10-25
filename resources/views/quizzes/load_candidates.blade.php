@@ -18,13 +18,15 @@
 
                 <tbody>
                     @foreach ($candidates as $candidate)
-                        <tr>
-                            <td> {{$candidate->first_name}} {{$candidate->last_name}} </td>
-                            <td> {{$candidate->email}} </td>
-                            <td>
-                                <input type="checkbox" name='list[{{$candidate->id}}]' {{$candidate->checked == 1 ? 'checked' : ''}}>
-                            </td>
-                        </tr>
+                        @if($candidate->select)
+                            <tr>
+                                <td> {{$candidate->first_name}} {{$candidate->last_name}} </td>
+                                <td> {{$candidate->email}} </td>
+                                <td>
+                                    <input type="checkbox" name='list[{{$candidate->id}}]' {{$candidate->checked == 1 ? 'checked' : ''}}>
+                                </td>
+                            </tr>
+                        @endif
                     @endforeach
                 </tbody>
             </table>

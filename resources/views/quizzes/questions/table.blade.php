@@ -42,7 +42,7 @@
                         <a class="pl-1 pr-1 m-auto editQuizModal" href="#" title="Edit" onclick="questions.edit('{{$question->id}}')">
                             <i class="fas fa-edit details"></i>
                         </a>
-                        <a class="pl-2 m-auto" href="#" title="Delete" onclick="questions.delete('{{$question->id}}')">
+                        <a class="pl-2 m-auto {{ $disable_delete ? 'd-none' : '' }}" href="#" title="Delete" onclick="questions.delete('{{$question->id}}')">
                             <i class="fas fa-trash-alt text-danger details"></i>  
                         </a>
                     </div>
