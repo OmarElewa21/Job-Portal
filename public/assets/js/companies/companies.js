@@ -1,1 +1,167 @@
-(()=>{"use strict";$(document).ready((function(){$("#filter_featured").select2({width:"170px"}),$("#filter_status").select2()})),$(document).on("click",".adminMakeFeatured",(function(e){var t=$(e.currentTarget).data("id");makeFeatured(t)})),window.makeFeatured=function(e){$.ajax({url:companiesUrl+"/"+e+"/mark-as-featured",method:"post",cache:!1,success:function(e){e.success&&(displaySuccessMessage(e.message),$('[data-toggle="tooltip"]').tooltip("hide"),window.livewire.emit("refresh"))},error:function(e){displayErrorMessage(e.responseJSON.message)}})},$(document).on("click",".adminUnFeatured",(function(e){var t=$(e.currentTarget).data("id");makeUnFeatured(t)})),window.makeUnFeatured=function(e){$.ajax({url:companiesUrl+"/"+e+"/mark-as-unfeatured",method:"post",cache:!1,success:function(e){e.success&&(displaySuccessMessage(e.message),$('[data-toggle="tooltip"]').tooltip("hide"),window.livewire.emit("refresh"))},error:function(e){displayErrorMessage(e.responseJSON.message)}})},$(document).on("click",".delete-btn",(function(e){var t=$(e.currentTarget).attr("data-id");swal({title:Lang.get("messages.common.delete")+" !",text:Lang.get("messages.common.are_you_sure_want_to_delete")+'"'+Lang.get("messages.candidate.employee")+'" ?',type:"warning",showCancelButton:!0,closeOnConfirm:!1,showLoaderOnConfirm:!0,confirmButtonColor:"#6777ef",cancelButtonColor:"#d33",cancelButtonText:Lang.get("messages.common.no"),confirmButtonText:Lang.get("messages.common.yes")},(function(){window.livewire.emit("deleteEmployee",t)}))})),document.addEventListener("delete",(function(){swal({title:Lang.get("messages.common.deleted")+" !",text:Lang.get("messages.candidate.employee")+Lang.get("messages.common.has_been_deleted"),type:"success",confirmButtonColor:"#6777ef",timer:2e3})})),$(document).on("change",".isFeatured",(function(e){var t=$(e.currentTarget).data("id");activeIsFeatured(t)})),$(document).on("change",".isActive",(function(e){var t=$(e.currentTarget).data("id");changeIsActive(t)})),window.changeIsActive=function(e){$.ajax({url:companiesUrl+"/"+e+"/change-is-active",method:"post",cache:!1,success:function(e){e.success&&(displaySuccessMessage(e.message),window.livewire.emit("refresh"))},error:function(e){displayErrorMessage(e.responseJSON.message)}})},$(document).on("change",".is-email-verified",(function(e){if(!$(this).is(":checked"))return!1;var t=$(e.currentTarget).data("id");changeEmailVerified(t),$(this).attr("disabled",!0)})),window.changeEmailVerified=function(e){$.ajax({url:companiesUrl+"/"+e+"/verify-email",method:"post",cache:!1,success:function(e){if(e.success)return displaySuccessMessage(e.message),!0},error:function(e){displayErrorMessage(e.responseJSON.message)}})},$(document).on("click",".send-email-verification",(function(e){var t=$(e.currentTarget).attr("data-id");$.ajax({url:companiesUrl+"/"+t+"/resend-email-verification",type:"post",success:function(e){if(e.success)return displaySuccessMessage(e.message),!0},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),$(document).ready((function(){$("#filter_featured").on("change",(function(e){var t=$("#filter_featured").select2("val");window.livewire.emit("changeFilter","featured",t)})),$("#filter_status").on("change",(function(e){var t=$("#filter_status").select2("val");window.livewire.emit("changeFilter","status",t)}))}))})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+var __webpack_exports__ = {};
+/*!****************************************************!*\
+  !*** ./resources/assets/js/companies/companies.js ***!
+  \****************************************************/
+
+
+$(document).ready(function () {
+  $('#filter_featured').select2({
+    width: '170px'
+  });
+  $('#filter_status').select2();
+});
+$(document).on('click', '.adminMakeFeatured', function (event) {
+  var companyId = $(event.currentTarget).data('id');
+  makeFeatured(companyId);
+});
+
+window.makeFeatured = function (id) {
+  $.ajax({
+    url: companiesUrl + '/' + id + '/mark-as-featured',
+    method: 'post',
+    cache: false,
+    success: function success(result) {
+      if (result.success) {
+        displaySuccessMessage(result.message);
+        $('[data-toggle="tooltip"]').tooltip('hide');
+        window.livewire.emit('refresh');
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    }
+  });
+};
+
+$(document).on('click', '.adminUnFeatured', function (event) {
+  var companyId = $(event.currentTarget).data('id');
+  makeUnFeatured(companyId);
+});
+
+window.makeUnFeatured = function (id) {
+  $.ajax({
+    url: companiesUrl + '/' + id + '/mark-as-unfeatured',
+    method: 'post',
+    cache: false,
+    success: function success(result) {
+      if (result.success) {
+        displaySuccessMessage(result.message);
+        $('[data-toggle="tooltip"]').tooltip('hide');
+        window.livewire.emit('refresh');
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    }
+  });
+};
+
+$(document).on('click', '.delete-btn', function (event) {
+  var companyId = $(event.currentTarget).attr('data-id');
+  swal({
+    title: Lang.get('messages.common.delete') + ' !',
+    text: Lang.get('messages.common.are_you_sure_want_to_delete') + '"' + Lang.get('messages.candidate.employee') + '" ?',
+    type: 'warning',
+    showCancelButton: true,
+    closeOnConfirm: false,
+    showLoaderOnConfirm: true,
+    confirmButtonColor: '#6777ef',
+    cancelButtonColor: '#d33',
+    cancelButtonText: Lang.get('messages.common.no'),
+    confirmButtonText: Lang.get('messages.common.yes')
+  }, function () {
+    window.livewire.emit('deleteEmployee', companyId);
+  });
+});
+document.addEventListener('delete', function () {
+  swal({
+    title: Lang.get('messages.common.deleted') + ' !',
+    text: Lang.get('messages.candidate.employee') + Lang.get('messages.common.has_been_deleted'),
+    type: 'success',
+    confirmButtonColor: '#6777ef',
+    timer: 2000
+  });
+});
+$(document).on('change', '.isFeatured', function (event) {
+  var companyId = $(event.currentTarget).data('id');
+  activeIsFeatured(companyId);
+});
+$(document).on('change', '.isActive', function (event) {
+  var companyId = $(event.currentTarget).data('id');
+  changeIsActive(companyId);
+});
+
+window.changeIsActive = function (id) {
+  $.ajax({
+    url: companiesUrl + '/' + id + '/change-is-active',
+    method: 'post',
+    cache: false,
+    success: function success(result) {
+      if (result.success) {
+        displaySuccessMessage(result.message);
+        window.livewire.emit('refresh');
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    }
+  });
+};
+
+$(document).on('change', '.is-email-verified', function (event) {
+  if ($(this).is(':checked')) {
+    var companyId = $(event.currentTarget).data('id');
+    changeEmailVerified(companyId);
+    $(this).attr('disabled', true);
+  } else {
+    return false;
+  }
+});
+
+window.changeEmailVerified = function (id) {
+  $.ajax({
+    url: companiesUrl + '/' + id + '/verify-email',
+    method: 'post',
+    cache: false,
+    success: function success(result) {
+      if (result.success) {
+        displaySuccessMessage(result.message);
+        return true;
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    }
+  });
+};
+
+$(document).on('click', '.send-email-verification', function (event) {
+  var companyId = $(event.currentTarget).attr('data-id');
+  $.ajax({
+    url: companiesUrl + '/' + companyId + '/resend-email-verification',
+    type: 'post',
+    success: function success(result) {
+      if (result.success) {
+        displaySuccessMessage(result.message);
+        return true;
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    }
+  });
+});
+$(document).ready(function () {
+  $('#filter_featured').on('change', function (e) {
+    var data = $('#filter_featured').select2('val');
+    window.livewire.emit('changeFilter', 'featured', data);
+  });
+  $('#filter_status').on('change', function (e) {
+    var data = $('#filter_status').select2('val');
+    window.livewire.emit('changeFilter', 'status', data);
+  });
+});
+/******/ })()
+;

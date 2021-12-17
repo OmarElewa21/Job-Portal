@@ -1,1 +1,384 @@
-$(document).ready((function(){"use strict";$("#locationId,#industryId,#ownershipTypeId,#companySizeId,#countryId,#stateId,#cityId").select2({width:employerPanel?"100%":"calc(100% - 44px)"}),$("#establishedIn,#countryID,#stateID").select2({width:"100%"}),$("#details").summernote({minHeight:200,height:200,placeholder:"Enter Employer Details...",toolbar:[["style",["bold","italic","underline","clear"]],["font",["strikethrough"]],["para",["paragraph"]]]}),$("#editDetails").summernote({minHeight:200,height:200,placeholder:"Enter Employer Details...",toolbar:[["style",["bold","italic","underline","clear"]],["font",["strikethrough"]],["para",["paragraph"]]]}),$("#description, #ownershipDescription").summernote({minHeight:200,height:200,toolbar:[["style",["bold","italic","underline","clear"]],["font",["strikethrough"]],["para",["paragraph"]]]}),$("#countryId").on("change",(function(){$.ajax({url:companyStateUrl,type:"get",dataType:"json",data:{postal:$(this).val()},success:function(e){$("#stateId").empty(),$("#stateId").append($('<option value=""></option>').text("Select State")),$.each(e.data,(function(e,a){$("#stateId").append($("<option></option>").attr("value",e).text(a))})),isEdit&&stateId&&$("#stateId").val(stateId).trigger("change")}})})),$("#stateId").on("change",(function(){$.ajax({url:companyCityUrl,type:"get",dataType:"json",data:{state:$(this).val(),country:$("#countryId").val()},success:function(e){$("#cityId").empty(),$.each(e.data,(function(e,a){$("#cityId").append($("<option ></option>").attr("value",e).text(a))})),isEdit&&cityId&&$("#cityId").val(cityId).trigger("change")}})})),isEdit&countryId&&$("#countryId").val(countryId).trigger("change"),$(document).on("change","#logo",(function(){isValidFile($(this),"#validationErrorsBox")?(displayPhoto(this,"#logoPreview"),$("#btnSave").prop("disabled",!1)):$("#btnSave").prop("disabled",!0)})),$(document).on("submit","#addCompanyForm",(function(e){if($("#btnSave").prop("disabled",!0),!checkSummerNoteEmpty("#details","Employer Details field is required.",1))return e.preventDefault(),$("#btnSave").attr("disabled",!1),!1})),$("#addCompanyForm,#editCompanyForm").submit((function(){if(""!==$("#error-msg").text())return $("#phoneNumber").focus(),!1})),$(document).on("submit","#editCompanyForm",(function(e){if($("#btnSave").prop("disabled",!0),!checkSummerNoteEmpty("#editDetails","Employer Details field is required.",1))return e.preventDefault(),$("#btnSave").attr("disabled",!1),!1})),$(document).on("submit","#addCompanyForm,#editCompanyForm",(function(e){e.preventDefault(),$("#addCompanyForm,#editCompanyForm").find("input:text:visible:first").focus();var a=$("#facebookUrl").val(),t=$("#twitterUrl").val(),o=$("#linkedInUrl").val(),n=$("#googlePlusUrl").val(),i=$("#pinterestUrl").val(),d=new RegExp(/^(https?:\/\/)?((m{1}\.)?)?((w{3}\.)?)facebook.[a-z]{2,3}\/?.*/i),r=new RegExp(/^(https?:\/\/)?((m{1}\.)?)?((w{3}\.)?)twitter\.[a-z]{2,3}\/?.*/i),s=new RegExp(/^(https?:\/\/)?((w{3}\.)?)?(plus\.)?(google\.[a-z]{2,3})\/?(([a-zA-Z 0-9._])?).*/i),l=new RegExp(/^(https?:\/\/)?((w{3}\.)?)linkedin\.[a-z]{2,3}\/?.*/i),c=new RegExp(/^(https?:\/\/)?((w{3}\.)?)pinterest\.[a-z]{2,3}\/?.*/i);return urlValidation(a,d),urlValidation(t,r),urlValidation(o,l),urlValidation(n,s),urlValidation(i,c),urlValidation(a,d)?urlValidation(t,r)?urlValidation(n,s)?urlValidation(o,l)?urlValidation(i,c)?($("#addCompanyForm,#editCompanyForm")[0].submit(),!0):(displayErrorMessage("Please enter a valid Pinterest Url"),$("#btnSave").prop("disabled",!1),!1):(displayErrorMessage("Please enter a valid Linkedin Url"),$("#btnSave").prop("disabled",!1),!1):(displayErrorMessage("Please enter a valid Google Plus Url"),$("#btnSave").prop("disabled",!1),!1):(displayErrorMessage("Please enter a valid Twitter Url"),$("#btnSave").prop("disabled",!1),!1):(displayErrorMessage("Please enter a valid Facebook Url"),$("#btnSave").prop("disabled",!1),!1)}))})),$(document).on("click",".addIndustryModal",(function(){$("#addModal").appendTo("body").modal("show")})),$(document).on("submit","#addNewForm",(function(e){if(e.preventDefault(),!checkSummerNoteEmpty("#description","Description field is required.",1))return!0;processingBtn("#addNewForm","#btnSave","loading"),$.ajax({url:industrySaveUrl,type:"POST",data:$(this).serialize(),success:function(e){if(e.success){displaySuccessMessage(e.message),$("#addModal").modal("hide");var a={id:e.data.id,text:e.data.name},t=new Option(a.text,a.id,!1,!0);$("#industryId").append(t).trigger("change")}},error:function(e){displayErrorMessage(e.responseJSON.message)},complete:function(){processingBtn("#addNewForm","#btnSave")}})})),$(document).on("click",".addOwnerShipTypeModal",(function(){$("#addOwnershipModal").appendTo("body").modal("show")})),$(document).on("submit","#addOwnershipForm",(function(e){if(e.preventDefault(),!checkSummerNoteEmpty("#ownershipDescription","Description field is required."))return!0;processingBtn("#addOwnershipForm","#ownershipBtnSave","loading"),$.ajax({url:ownerShipTypeSaveUrl,type:"POST",data:$(this).serialize(),success:function(e){if(e.success){displaySuccessMessage(e.message),$("#addOwnershipModal").modal("hide");var a={id:e.data.id,text:e.data.name},t=new Option(a.text,a.id,!1,!0);$("#ownershipTypeId").append(t).trigger("change")}},error:function(e){displayErrorMessage(e.responseJSON.message)},complete:function(){processingBtn("#addOwnershipForm","#ownershipBtnSave")}})})),$("#addOwnershipModal").on("hidden.bs.modal",(function(){resetModalForm("#addOwnershipForm","#ownershipValidationErrorsBox"),$("#ownershipDescription").summernote("code","")})),$(document).on("click",".addCountryModal",(function(){$("#addCountryModal").appendTo("body").modal("show")})),$(document).on("submit","#addCountryForm",(function(e){e.preventDefault(),processingBtn("#addCountryForm","#countryBtnSave","loading"),$.ajax({url:countrySaveUrl,type:"POST",data:$(this).serialize(),success:function(e){if(e.success){displaySuccessMessage(e.message),$("#addCountryModal").modal("hide");var a={id:e.data.id,text:e.data.name},t=new Option(a.text,a.id,!1,!0);$("#countryId").append(t).trigger("change")}},error:function(e){displayErrorMessage(e.responseJSON.message)},complete:function(){processingBtn("#addCountryForm","#countryBtnSave")}})})),$("#addCountryModal").on("hidden.bs.modal",(function(){resetModalForm("#addCountryForm","#countryValidationErrorsBox")})),$(document).on("click",".addStateModal",(function(){$("#addStateModal").appendTo("body").modal("show")})),$(document).on("submit","#addStateForm",(function(e){e.preventDefault(),processingBtn("#addStateForm","#stateBtnSave","loading"),$.ajax({url:stateSaveUrl,type:"POST",data:$(this).serialize(),success:function(e){if(e.success){displaySuccessMessage(e.message),$("#addStateModal").modal("hide");var a={id:e.data.id,text:e.data.name},t=new Option(a.text,a.id,!1,!0);$("#stateId").append(t).trigger("change")}},error:function(e){displayErrorMessage(e.responseJSON.message)},complete:function(){processingBtn("#addStateForm","#stateBtnSave")}})})),$("#addStateModal").on("hidden.bs.modal",(function(){$("#countryID").val("").trigger("change"),resetModalForm("#addStateForm","#StateValidationErrorsBox")})),$(document).on("click",".addCityModal",(function(){$("#addCityModal").appendTo("body").modal("show")})),$(document).on("submit","#addCityForm",(function(e){e.preventDefault(),processingBtn("#addCityForm","#cityBtnSave","loading"),$.ajax({url:citySaveUrl,type:"POST",data:$(this).serialize(),success:function(e){if(e.success){displaySuccessMessage(e.message),$("#addCityModal").modal("hide");var a={id:e.data.id,text:e.data.name},t=new Option(a.text,a.id,!1,!0);$("#cityId").append(t).trigger("change")}},error:function(e){displayErrorMessage(e.responseJSON.message)},complete:function(){processingBtn("#addCityForm","#cityBtnSave")}})})),$("#addCityModal").on("hidden.bs.modal",(function(){$("#stateID").val("").trigger("change"),resetModalForm("#addCityForm","#cityValidationErrorsBox")})),$(document).on("click",".addCompanySizeModal",(function(){$("#addCompanySizeModal").appendTo("body").modal("show")})),$(document).on("submit","#addCompanySizeForm",(function(e){e.preventDefault(),processingBtn("#addCompanySizeForm","#companySizeBtnSave","loading"),$.ajax({url:companySizeSaveUrl,type:"POST",data:$(this).serialize(),success:function(e){if(e.success){displaySuccessMessage(e.message),$("#addCompanySizeModal").modal("hide");var a={id:e.data.id,text:e.data.size},t=new Option(a.text,a.id,!1,!0);$("#companySizeId").append(t).trigger("change")}},error:function(e){displayErrorMessage(e.responseJSON.message)},complete:function(){processingBtn("#addCompanySizeForm","#companySizeBtnSave")}})})),$("#addCompanySizeModal").on("shown.bs.modal",(function(){$("#size").focus()})),$("#addCompanySizeModal").on("hidden.bs.modal",(function(){resetModalForm("#addCompanySizeForm","#companySizeValidationErrorsBox")}));
+/******/ (() => { // webpackBootstrap
+var __webpack_exports__ = {};
+/*!******************************************************!*\
+  !*** ./resources/assets/js/companies/create-edit.js ***!
+  \******************************************************/
+$(document).ready(function () {
+  'use strict';
+
+  $('#locationId,#industryId,#ownershipTypeId,#companySizeId,#countryId,#stateId,#cityId').select2({
+    width: !employerPanel ? 'calc(100% - 44px)' : '100%'
+  });
+  $('#establishedIn,#countryID,#stateID').select2({
+    width: '100%'
+  });
+  $('#details').summernote({
+    minHeight: 200,
+    height: 200,
+    placeholder: 'Enter Employer Details...',
+    toolbar: [['style', ['bold', 'italic', 'underline', 'clear']], ['font', ['strikethrough']], ['para', ['paragraph']]]
+  });
+  $('#editDetails').summernote({
+    minHeight: 200,
+    height: 200,
+    placeholder: 'Enter Employer Details...',
+    toolbar: [['style', ['bold', 'italic', 'underline', 'clear']], ['font', ['strikethrough']], ['para', ['paragraph']]]
+  });
+  $('#description, #ownershipDescription').summernote({
+    minHeight: 200,
+    height: 200,
+    toolbar: [['style', ['bold', 'italic', 'underline', 'clear']], ['font', ['strikethrough']], ['para', ['paragraph']]]
+  });
+  $('#countryId').on('change', function () {
+    $.ajax({
+      url: companyStateUrl,
+      type: 'get',
+      dataType: 'json',
+      data: {
+        postal: $(this).val()
+      },
+      success: function success(data) {
+        $('#stateId').empty();
+        $('#stateId').append($('<option value=""></option>').text('Select State'));
+        $.each(data.data, function (i, v) {
+          $('#stateId').append($('<option></option>').attr('value', i).text(v));
+        });
+
+        if (isEdit && stateId) {
+          $('#stateId').val(stateId).trigger('change');
+        }
+      }
+    });
+  });
+  $('#stateId').on('change', function () {
+    $.ajax({
+      url: companyCityUrl,
+      type: 'get',
+      dataType: 'json',
+      data: {
+        state: $(this).val(),
+        country: $('#countryId').val()
+      },
+      success: function success(data) {
+        $('#cityId').empty();
+        $.each(data.data, function (i, v) {
+          $('#cityId').append($('<option ></option>').attr('value', i).text(v));
+        });
+
+        if (isEdit && cityId) {
+          $('#cityId').val(cityId).trigger('change');
+        }
+      }
+    });
+  });
+
+  if (isEdit & countryId) {
+    $('#countryId').val(countryId).trigger('change');
+  }
+
+  $(document).on('change', '#logo', function () {
+    var validFile = isValidFile($(this), '#validationErrorsBox');
+
+    if (validFile) {
+      displayPhoto(this, '#logoPreview');
+      $('#btnSave').prop('disabled', false);
+    } else {
+      $('#btnSave').prop('disabled', true);
+    }
+  });
+  $(document).on('submit', '#addCompanyForm', function (e) {
+    $('#btnSave').prop('disabled', true);
+
+    if (!checkSummerNoteEmpty('#details', 'Employer Details field is required.', 1)) {
+      e.preventDefault();
+      $('#btnSave').attr('disabled', false);
+      return false;
+    }
+  });
+  $('#addCompanyForm,#editCompanyForm').submit(function () {
+    if ($('#error-msg').text() !== '') {
+      $('#phoneNumber').focus();
+      return false;
+    }
+  });
+  $(document).on('submit', '#editCompanyForm', function (e) {
+    $('#btnSave').prop('disabled', true);
+
+    if (!checkSummerNoteEmpty('#editDetails', 'Employer Details field is required.', 1)) {
+      e.preventDefault();
+      $('#btnSave').attr('disabled', false);
+      return false;
+    }
+  });
+  $(document).on('submit', '#addCompanyForm,#editCompanyForm', function (e) {
+    e.preventDefault();
+    $('#addCompanyForm,#editCompanyForm').find('input:text:visible:first').focus();
+    var facebookUrl = $('#facebookUrl').val();
+    var twitterUrl = $('#twitterUrl').val();
+    var linkedInUrl = $('#linkedInUrl').val();
+    var googlePlusUrl = $('#googlePlusUrl').val();
+    var pinterestUrl = $('#pinterestUrl').val();
+    var facebookExp = new RegExp(/^(https?:\/\/)?((m{1}\.)?)?((w{3}\.)?)facebook.[a-z]{2,3}\/?.*/i);
+    var twitterExp = new RegExp(/^(https?:\/\/)?((m{1}\.)?)?((w{3}\.)?)twitter\.[a-z]{2,3}\/?.*/i);
+    var googlePlusExp = new RegExp(/^(https?:\/\/)?((w{3}\.)?)?(plus\.)?(google\.[a-z]{2,3})\/?(([a-zA-Z 0-9._])?).*/i);
+    var linkedInExp = new RegExp(/^(https?:\/\/)?((w{3}\.)?)linkedin\.[a-z]{2,3}\/?.*/i);
+    var pinterestExp = new RegExp(/^(https?:\/\/)?((w{3}\.)?)pinterest\.[a-z]{2,3}\/?.*/i);
+    urlValidation(facebookUrl, facebookExp);
+    urlValidation(twitterUrl, twitterExp);
+    urlValidation(linkedInUrl, linkedInExp);
+    urlValidation(googlePlusUrl, googlePlusExp);
+    urlValidation(pinterestUrl, pinterestExp);
+
+    if (!urlValidation(facebookUrl, facebookExp)) {
+      displayErrorMessage('Please enter a valid Facebook Url');
+      $('#btnSave').prop('disabled', false);
+      return false;
+    }
+
+    if (!urlValidation(twitterUrl, twitterExp)) {
+      displayErrorMessage('Please enter a valid Twitter Url');
+      $('#btnSave').prop('disabled', false);
+      return false;
+    }
+
+    if (!urlValidation(googlePlusUrl, googlePlusExp)) {
+      displayErrorMessage('Please enter a valid Google Plus Url');
+      $('#btnSave').prop('disabled', false);
+      return false;
+    }
+
+    if (!urlValidation(linkedInUrl, linkedInExp)) {
+      displayErrorMessage('Please enter a valid Linkedin Url');
+      $('#btnSave').prop('disabled', false);
+      return false;
+    }
+
+    if (!urlValidation(pinterestUrl, pinterestExp)) {
+      displayErrorMessage('Please enter a valid Pinterest Url');
+      $('#btnSave').prop('disabled', false);
+      return false;
+    }
+
+    $('#addCompanyForm,#editCompanyForm')[0].submit();
+    return true;
+  });
+}); // industry
+
+$(document).on('click', '.addIndustryModal', function () {
+  $('#addModal').appendTo('body').modal('show');
+});
+$(document).on('submit', '#addNewForm', function (e) {
+  e.preventDefault();
+
+  if (!checkSummerNoteEmpty('#description', 'Description field is required.', 1)) {
+    return true;
+  }
+
+  processingBtn('#addNewForm', '#btnSave', 'loading');
+  $.ajax({
+    url: industrySaveUrl,
+    type: 'POST',
+    data: $(this).serialize(),
+    success: function success(result) {
+      if (result.success) {
+        displaySuccessMessage(result.message);
+        $('#addModal').modal('hide');
+        var data = {
+          id: result.data.id,
+          text: result.data.name
+        };
+        var newOption = new Option(data.text, data.id, false, true);
+        $('#industryId').append(newOption).trigger('change');
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    },
+    complete: function complete() {
+      processingBtn('#addNewForm', '#btnSave');
+    }
+  });
+}); //ownership type 
+
+$(document).on('click', '.addOwnerShipTypeModal', function () {
+  $('#addOwnershipModal').appendTo('body').modal('show');
+});
+$(document).on('submit', '#addOwnershipForm', function (e) {
+  e.preventDefault();
+
+  if (!checkSummerNoteEmpty('#ownershipDescription', 'Description field is required.')) {
+    return true;
+  }
+
+  processingBtn('#addOwnershipForm', '#ownershipBtnSave', 'loading');
+  $.ajax({
+    url: ownerShipTypeSaveUrl,
+    type: 'POST',
+    data: $(this).serialize(),
+    success: function success(result) {
+      if (result.success) {
+        displaySuccessMessage(result.message);
+        $('#addOwnershipModal').modal('hide');
+        var data = {
+          id: result.data.id,
+          text: result.data.name
+        };
+        var newOption = new Option(data.text, data.id, false, true);
+        $('#ownershipTypeId').append(newOption).trigger('change');
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    },
+    complete: function complete() {
+      processingBtn('#addOwnershipForm', '#ownershipBtnSave');
+    }
+  });
+});
+$('#addOwnershipModal').on('hidden.bs.modal', function () {
+  resetModalForm('#addOwnershipForm', '#ownershipValidationErrorsBox');
+  $('#ownershipDescription').summernote('code', '');
+}); //country
+
+$(document).on('click', '.addCountryModal', function () {
+  $('#addCountryModal').appendTo('body').modal('show');
+});
+$(document).on('submit', '#addCountryForm', function (e) {
+  e.preventDefault();
+  processingBtn('#addCountryForm', '#countryBtnSave', 'loading');
+  $.ajax({
+    url: countrySaveUrl,
+    type: 'POST',
+    data: $(this).serialize(),
+    success: function success(result) {
+      if (result.success) {
+        displaySuccessMessage(result.message);
+        $('#addCountryModal').modal('hide');
+        var data = {
+          id: result.data.id,
+          text: result.data.name
+        };
+        var newOption = new Option(data.text, data.id, false, true);
+        $('#countryId').append(newOption).trigger('change');
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    },
+    complete: function complete() {
+      processingBtn('#addCountryForm', '#countryBtnSave');
+    }
+  });
+});
+$('#addCountryModal').on('hidden.bs.modal', function () {
+  resetModalForm('#addCountryForm', '#countryValidationErrorsBox');
+}); // state
+
+$(document).on('click', '.addStateModal', function () {
+  $('#addStateModal').appendTo('body').modal('show');
+});
+$(document).on('submit', '#addStateForm', function (e) {
+  e.preventDefault();
+  processingBtn('#addStateForm', '#stateBtnSave', 'loading');
+  $.ajax({
+    url: stateSaveUrl,
+    type: 'POST',
+    data: $(this).serialize(),
+    success: function success(result) {
+      if (result.success) {
+        displaySuccessMessage(result.message);
+        $('#addStateModal').modal('hide');
+        var data = {
+          id: result.data.id,
+          text: result.data.name
+        };
+        var newOption = new Option(data.text, data.id, false, true);
+        $('#stateId').append(newOption).trigger('change');
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    },
+    complete: function complete() {
+      processingBtn('#addStateForm', '#stateBtnSave');
+    }
+  });
+});
+$('#addStateModal').on('hidden.bs.modal', function () {
+  $('#countryID').val('').trigger('change');
+  resetModalForm('#addStateForm', '#StateValidationErrorsBox');
+}); //city
+
+$(document).on('click', '.addCityModal', function () {
+  $('#addCityModal').appendTo('body').modal('show');
+});
+$(document).on('submit', '#addCityForm', function (e) {
+  e.preventDefault();
+  processingBtn('#addCityForm', '#cityBtnSave', 'loading');
+  $.ajax({
+    url: citySaveUrl,
+    type: 'POST',
+    data: $(this).serialize(),
+    success: function success(result) {
+      if (result.success) {
+        displaySuccessMessage(result.message);
+        $('#addCityModal').modal('hide');
+        var data = {
+          id: result.data.id,
+          text: result.data.name
+        };
+        var newOption = new Option(data.text, data.id, false, true);
+        $('#cityId').append(newOption).trigger('change');
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    },
+    complete: function complete() {
+      processingBtn('#addCityForm', '#cityBtnSave');
+    }
+  });
+});
+$('#addCityModal').on('hidden.bs.modal', function () {
+  $('#stateID').val('').trigger('change');
+  resetModalForm('#addCityForm', '#cityValidationErrorsBox');
+}); //company size
+
+$(document).on('click', '.addCompanySizeModal', function () {
+  $('#addCompanySizeModal').appendTo('body').modal('show');
+});
+$(document).on('submit', '#addCompanySizeForm', function (e) {
+  e.preventDefault();
+  processingBtn('#addCompanySizeForm', '#companySizeBtnSave', 'loading');
+  $.ajax({
+    url: companySizeSaveUrl,
+    type: 'POST',
+    data: $(this).serialize(),
+    success: function success(result) {
+      if (result.success) {
+        displaySuccessMessage(result.message);
+        $('#addCompanySizeModal').modal('hide');
+        var data = {
+          id: result.data.id,
+          text: result.data.size
+        };
+        var newOption = new Option(data.text, data.id, false, true);
+        $('#companySizeId').append(newOption).trigger('change');
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    },
+    complete: function complete() {
+      processingBtn('#addCompanySizeForm', '#companySizeBtnSave');
+    }
+  });
+});
+$('#addCompanySizeModal').on('shown.bs.modal', function () {
+  $('#size').focus();
+});
+$('#addCompanySizeModal').on('hidden.bs.modal', function () {
+  resetModalForm('#addCompanySizeForm', '#companySizeValidationErrorsBox');
+});
+/******/ })()
+;

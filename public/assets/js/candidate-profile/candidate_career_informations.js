@@ -1,1 +1,454 @@
-(()=>{"use strict";$(document).ready((function(){$("#countryId, #educationCountryId, #editCountry, #editState, #editCity, #degreeLevelId, #editEducationCountry, #editEducationState, #editEducationCity").select2({width:"100%"}),$("#addExperienceModal").on("shown.bs.modal",(function(){setDatePicker("#startDate","#endDate")})),$("#editExperienceModal").on("shown.bs.modal",(function(){setDatePicker("#editStartDate","#editEndDate")})),window.setDatePicker=function(e,t){$(e).datetimepicker(DatetimepickerDefaults({format:"YYYY-MM-DD",useCurrent:!0,sideBySide:!0,maxDate:new moment})),$(t).datetimepicker(DatetimepickerDefaults({format:"YYYY-MM-DD",sideBySide:!0,maxDate:new moment,useCurrent:!1}))},window.setExperienceSelect2=function(){$("#stateId").select2({width:"100%",placeholder:"Select State"}),$("#cityId").select2({width:"100%",placeholder:"Select City"})},window.setEducationSelect2=function(){$("#educationStateId").select2({width:"100%",placeholder:"Select State"}),$("#educationCityId").select2({width:"100%",placeholder:"Select City"})},$("#startDate").on("dp.change",(function(e){$("#endDate").val(""),$("#endDate").data("DateTimePicker").minDate(e.date)})),$("#editStartDate").on("dp.change",(function(e){setTimeout((function(){$("#editEndDate").data("DateTimePicker").minDate(e.date)}),1e3)})),$("#default").on("click",(function(){1==$(this).prop("checked")?($("#endDate").prop("disabled",!0),$("#endDate").val(""),$("#endDate").val("").removeAttr("required",!1),$("#requiredText").addClass("d-none")):0==$(this).prop("checked")&&($("#endDate").val("").attr("required",!0),$("#requiredText").removeClass("d-none"),$("#endDate").data("DateTimePicker").minDate($("#startDate").val()),$("#endDate").prop("disabled",!1))})),$("#editWorking").on("click",(function(){1==$(this).prop("checked")?($("#editEndDate").prop("disabled",!0),$("#editEndDate").val(""),$("#editEndDate").val("").removeAttr("required",!1),$("#editRequiredText").addClass("d-none")):0==$(this).prop("checked")&&($("#editEndDate").val("").attr("required",!0),$("#editRequiredText").removeClass("d-none"),$("#editEndDate").data("DateTimePicker").minDate($("#editStartDate").val()),$("#editEndDate").prop("disabled",!1))})),$(".addExperienceModal").on("click",(function(){setExperienceSelect2(),$("#addExperienceModal").appendTo("body").modal("show")})),$(".addEducationModal").on("click",(function(){setEducationSelect2(),$("#addEducationModal").appendTo("body").modal("show")})),window.renderExperienceTemplate=function(e){var t=null!=$(".candidate-experience-container .candidate-experience:last").data("experience-id")?$(".candidate-experience-container .candidate-experience:last").data("experience-id")+1:0,a=$.templates("#candidateExperienceTemplate"),d=1==e.currently_working?present:moment(e.end_date,"YYYY-MM-DD").format("Do MMM, YYYY"),n={candidateExperienceNumber:t,id:e.id,title:e.experience_title,company:e.company,startDate:moment(e.start_date,"YYYY-MM-DD").format("Do MMM, YYYY"),endDate:d,description:e.description,country:e.country},i=a.render(n);$(".candidate-experience-container").append(i),$("#notfoundExperience").addClass("d-none")},$(document).on("submit","#addNewExperienceForm",(function(e){e.preventDefault(),processingBtn("#addNewExperienceForm","#btnExperienceSave","loading"),$.ajax({url:addExperienceUrl,type:"POST",data:$(this).serialize(),success:function(e){e.success&&($("#notfoundExperience").addClass("d-none"),displaySuccessMessage(e.message),$("#addExperienceModal").modal("hide"),renderExperienceTemplate(e.data))},error:function(e){displayErrorMessage(e.responseJSON.message)},complete:function(){processingBtn("#addNewExperienceForm","#btnExperienceSave")}})})),$(document).on("click",".edit-experience",(function(e){var t=$(e.currentTarget).data("id");renderExperienceData(t)})),window.renderExperienceData=function(e){$.ajax({url:candidateUrl+e+"/edit-experience",type:"GET",success:function(e){e.success&&($("#experienceId").val(e.data.id),$("#editTitle").val(e.data.experience_title),$("#editCompany").val(e.data.company),$("#editCountry").val(e.data.country_id).trigger("change",[{stateId:e.data.state_id,cityId:e.data.city_id}]),$("#editStartDate").val(moment(e.data.start_date).format("YYYY-MM-DD")),$("#editDescription").val(e.data.description),1==e.data.currently_working?($("#editWorking").prop("checked",!0),$("#editEndDate").val("")):($("#editWorking").prop("checked",!1),$("#editEndDate").val(moment(e.data.end_date).format("YYYY-MM-DD")),$("#editRequiredText").removeClass("d-none")),1==e.data.currently_working&&$("#editEndDate").prop("disabled",!0),$("#editExperienceModal").appendTo("body").modal("show"))},error:function(e){displayErrorMessage(e.responseJSON.message)}})},$(document).on("submit","#editExperienceForm",(function(e){e.preventDefault(),processingBtn("#editExperienceForm","#btnEditExperienceSave","loading");var t=$("#experienceId").val();$.ajax({url:experienceUrl+t,type:"put",data:$(this).serialize(),success:function(e){e.success&&(displaySuccessMessage(e.message),$("#editExperienceModal").modal("hide"),setTimeout((function(){location.reload()}),3e3),$(".candidate-experience-container").children(".candidate-experience").each((function(){$(this).attr("data-id")==e.data.id&&$(this).remove()})),renderExperienceTemplate(e.data.candidateExperience))},error:function(e){displayErrorMessage(e.responseJSON.message)},complete:function(){processingBtn("#editExperienceForm","#btnEditExperienceSave")}})})),$("#addExperienceModal").on("hidden.bs.modal",(function(){resetModalForm("#addNewExperienceForm","#validationErrorsBox"),$("#countryId, #stateId, #cityId").val(""),$("#stateId, #cityId").empty(),$("#countryId").trigger("change.select2")})),$("#addEducationModal").on("hidden.bs.modal",(function(){resetModalForm("#addNewEducationForm","#validationErrorsBox"),$("#degreeLevelId").val(""),$("#degreeLevelId").select2({width:"100%",placeholder:"Select Degree Level"}),$("#educationCountryId, #educationStateId, #educationCityId").val(""),$("#educationStateId, #educationCityId").empty(),$("#educationCountryId").trigger("change.select2")})),$(document).on("click",".delete-experience",(function(e){var t=$(e.currentTarget).data("id");deleteItem(experienceUrl+t,"Experience",".candidate-experience-container",".candidate-experience","#notfoundExperience")})),window.renderEducationTemplate=function(e){var t=null!=$(".candidate-education-container .candidate-education:last").data("education-id")?$(".candidate-education-container .candidate-education:last").data("experience-id")+1:0,a=$.templates("#candidateEducationTemplate"),d={candidateEducationNumber:t,id:e.id,degreeLevel:e.degree_level.name,degreeTitle:e.degree_title,year:e.year,country:e.country,institute:e.institute},n=a.render(d);$(".candidate-education-container").append(n),$("#notfoundEducation").addClass("d-none")},$(document).on("submit","#addNewEducationForm",(function(e){e.preventDefault(),processingBtn("#addNewEducationForm","#btnEducationSave","loading"),$.ajax({url:addEducationUrl,type:"POST",data:$(this).serialize(),success:function(e){e.success&&($("#notfoundEducation").addClass("d-none"),displaySuccessMessage(e.message),$("#addEducationModal").modal("hide"),renderEducationTemplate(e.data))},error:function(e){displayErrorMessage(e.responseJSON.message)},complete:function(){processingBtn("#addNewEducationForm","#btnEducationSave")}})})),$(document).on("click",".edit-education",(function(e){var t=$(e.currentTarget).data("id");renderEducationData(t)})),window.renderEducationData=function(e){$.ajax({url:candidateUrl+e+"/edit-education",type:"GET",success:function(e){e.success&&($("#educationId").val(e.data.id),$("#editDegreeLevel").val(e.data.degree_level.id).trigger("change"),$("#editDegreeTitle").val(e.data.degree_title),$("#editEducationCountry").val(e.data.country_id).trigger("change",[{stateId:e.data.state_id,cityId:e.data.city_id}]),$("#editInstitute").val(e.data.institute),$("#editResult").val(e.data.result),$("#editYear").val(e.data.year).trigger("change"),$("#editEducationModal").appendTo("body").modal("show"))},error:function(e){displayErrorMessage(e.responseJSON.message)}})},$(document).on("submit","#editEducationForm",(function(e){e.preventDefault(),processingBtn("#editEducationForm","#btnEditEducationSave","loading");var t=$("#educationId").val();$.ajax({url:educationUrl+t,type:"put",data:$(this).serialize(),success:function(e){e.success&&(displaySuccessMessage(e.message),$("#editEducationModal").modal("hide"),setTimeout((function(){location.reload()}),3e3),$(".candidate-education-container").children(".candidate-education").each((function(){$(this).attr("data-id")==e.data.id&&$(this).remove()})),renderEducationTemplate(e.data.candidateEducation))},error:function(e){displayErrorMessage(e.responseJSON.message)},complete:function(){processingBtn("#editEducationForm","#btnEditEducationSave")}})})),$("#editEducationModal").on("hidden.bs.modal",(function(){resetModalForm("#addNewEducationForm","#validationErrorsBox")})),$(document).on("click",".delete-education",(function(e){var t=$(e.currentTarget).data("id");deleteItem(educationUrl+t,"Education",".candidate-education-container",".candidate-education","#notfoundEducation")})),window.deleteItem=function(e,t,a,d,n){swal({title:Lang.get("messages.common.delete")+" !",text:Lang.get("messages.common.are_you_sure_want_to_delete")+'"'+t+'" ?',type:"warning",showCancelButton:!0,closeOnConfirm:!1,showLoaderOnConfirm:!0,confirmButtonColor:"#6777ef",cancelButtonColor:"#d33",cancelButtonText:Lang.get("messages.common.no"),confirmButtonText:Lang.get("messages.common.yes")},(function(){!function(e,t,a,d,n){$.ajax({url:e,type:"DELETE",dataType:"json",success:function(e){e.success&&($(a).children(d).each((function(){$(this).attr("data-id")==e.data&&$(this).remove()})),$(a).children(d).length<=0&&$(n).removeClass("d-none")),swal({title:Lang.get("messages.common.deleted")+" !",text:t+Lang.get("messages.common.has_been_deleted"),type:"success",confirmButtonColor:"#6777ef",timer:2e3})},error:function(e){swal({title:"",text:e.responseJSON.message,type:"error",confirmButtonColor:"#6777ef",timer:5e3})}})}(e,t,a,d,n)}))},$("#countryId, #educationCountryId, #editCountry, #editEducationCountry").on("change",(function(e,t){var a=$(this).data("modal-type"),d=void 0!==$(this).data("is-edit");$.ajax({url:companyStateUrl,type:"get",dataType:"json",data:{postal:$(this).val()},success:function(e){$("experience"===a?d?"#editState":"#stateId":d?"#editEducationState":"#educationStateId").empty(),$("experience"===a?d?"#editState":"#stateId":d?"#editEducationState":"#educationStateId").append('<option value="" selected>Select State</option>'),$.each(e.data,(function(e,t){$("experience"===a?d?"#editState":"#stateId":d?"#editEducationState":"#educationStateId").append($("<option></option>").attr("value",e).text(t))})),d&&$("experience"===a?"#editState":"#editEducationState").val(void 0!==t?t.stateId:"").trigger("change",void 0!==t?[{cityId:t.cityId}]:"")}})})),$("#stateId, #educationStateId, #editState, #editEducationState").on("change",(function(e,t){var a=$(this).data("modal-type"),d=void 0!==$(this).data("is-edit");$.ajax({url:companyCityUrl,type:"get",dataType:"json",data:{state:$(this).val(),country:$("experience"===a?d?"#editCountry":"#countryId":d?"#editEducationCountry":"#educationCountryId").val()},success:function(e){$("experience"===a?d?"#editCity":"#cityId":d?"#editEducationCity":"#educationCityId").empty(),$("experience"===a?d?"#editCity":"#cityId":d?"#editEducationCity":"#educationCityId").append('<option value="" selected>Select City</option>'),$.each(e.data,(function(e,t){$("experience"===a?d?"#editCity":"#cityId":d?"#editEducationCity":"#educationCityId").append($("<option></option>").attr("value",e).text(t))})),d&&$("experience"===a?"#editCity":"#editEducationCity").val(void 0!==t?t.cityId:"").trigger("change.select2")}})}))}))})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+var __webpack_exports__ = {};
+/*!*******************************************************************************************!*\
+  !*** ./resources/assets/js/candidates/candidate-profile/candidate_career_informations.js ***!
+  \*******************************************************************************************/
+
+
+$(document).ready(function () {
+  $('#countryId, #educationCountryId, #editCountry, #editState, #editCity, #degreeLevelId, #editEducationCountry, #editEducationState, #editEducationCity').select2({
+    'width': '100%'
+  });
+  $('#addExperienceModal').on('shown.bs.modal', function () {
+    setDatePicker('#startDate', '#endDate');
+  });
+  $('#editExperienceModal').on('shown.bs.modal', function () {
+    setDatePicker('#editStartDate', '#editEndDate');
+  });
+
+  window.setDatePicker = function (startDate, endDate) {
+    $(startDate).datetimepicker(DatetimepickerDefaults({
+      format: 'YYYY-MM-DD',
+      useCurrent: true,
+      sideBySide: true,
+      maxDate: new moment()
+    }));
+    $(endDate).datetimepicker(DatetimepickerDefaults({
+      format: 'YYYY-MM-DD',
+      sideBySide: true,
+      maxDate: new moment(),
+      useCurrent: false
+    }));
+  };
+
+  window.setExperienceSelect2 = function () {
+    $('#stateId').select2({
+      'width': '100%',
+      'placeholder': 'Select State'
+    });
+    $('#cityId').select2({
+      'width': '100%',
+      'placeholder': 'Select City'
+    });
+  };
+
+  window.setEducationSelect2 = function () {
+    $('#educationStateId').select2({
+      'width': '100%',
+      'placeholder': 'Select State'
+    });
+    $('#educationCityId').select2({
+      'width': '100%',
+      'placeholder': 'Select City'
+    });
+  };
+
+  $('#startDate').on('dp.change', function (e) {
+    $('#endDate').val('');
+    $('#endDate').data('DateTimePicker').minDate(e.date);
+  });
+  $('#editStartDate').on('dp.change', function (e) {
+    setTimeout(function () {
+      $('#editEndDate').data('DateTimePicker').minDate(e.date);
+    }, 1000);
+  });
+  $('#default').on('click', function () {
+    if ($(this).prop('checked') == true) {
+      $('#endDate').prop('disabled', true);
+      $('#endDate').val('');
+      $('#endDate').val('').removeAttr('required', false);
+      $('#requiredText').addClass('d-none');
+    } else if ($(this).prop('checked') == false) {
+      $('#endDate').val('').attr('required', true);
+      $('#requiredText').removeClass('d-none');
+      $('#endDate').data('DateTimePicker').minDate($('#startDate').val());
+      $('#endDate').prop('disabled', false);
+    }
+  });
+  $('#editWorking').on('click', function () {
+    if ($(this).prop('checked') == true) {
+      $('#editEndDate').prop('disabled', true);
+      $('#editEndDate').val('');
+      $('#editEndDate').val('').removeAttr('required', false);
+      $('#editRequiredText').addClass('d-none');
+    } else if ($(this).prop('checked') == false) {
+      $('#editEndDate').val('').attr('required', true);
+      $('#editRequiredText').removeClass('d-none');
+      $('#editEndDate').data('DateTimePicker').minDate($('#editStartDate').val());
+      $('#editEndDate').prop('disabled', false);
+    }
+  });
+  $('.addExperienceModal').on('click', function () {
+    setExperienceSelect2();
+    $('#addExperienceModal').appendTo('body').modal('show');
+  });
+  $('.addEducationModal').on('click', function () {
+    setEducationSelect2();
+    $('#addEducationModal').appendTo('body').modal('show');
+  });
+
+  window.renderExperienceTemplate = function (experienceArray) {
+    var candidateExperienceCount = $('.candidate-experience-container .candidate-experience:last').data('experience-id') != undefined ? $('.candidate-experience-container .candidate-experience:last').data('experience-id') + 1 : 0;
+    var template = $.templates('#candidateExperienceTemplate');
+    var endDate = experienceArray.currently_working == 1 ? present : moment(experienceArray.end_date, 'YYYY-MM-DD').format('Do MMM, YYYY');
+    var data = {
+      candidateExperienceNumber: candidateExperienceCount,
+      id: experienceArray.id,
+      title: experienceArray.experience_title,
+      company: experienceArray.company,
+      startDate: moment(experienceArray.start_date, 'YYYY-MM-DD').format('Do MMM, YYYY'),
+      endDate: endDate,
+      description: experienceArray.description,
+      country: experienceArray.country
+    };
+    var stageTemplateHtml = template.render(data);
+    $('.candidate-experience-container').append(stageTemplateHtml);
+    $('#notfoundExperience').addClass('d-none');
+  };
+
+  $(document).on('submit', '#addNewExperienceForm', function (e) {
+    e.preventDefault();
+    processingBtn('#addNewExperienceForm', '#btnExperienceSave', 'loading');
+    $.ajax({
+      url: addExperienceUrl,
+      type: 'POST',
+      data: $(this).serialize(),
+      success: function success(result) {
+        if (result.success) {
+          $('#notfoundExperience').addClass('d-none');
+          displaySuccessMessage(result.message);
+          $('#addExperienceModal').modal('hide');
+          renderExperienceTemplate(result.data);
+        }
+      },
+      error: function error(result) {
+        displayErrorMessage(result.responseJSON.message);
+      },
+      complete: function complete() {
+        processingBtn('#addNewExperienceForm', '#btnExperienceSave');
+      }
+    });
+  });
+  $(document).on('click', '.edit-experience', function (event) {
+    var experienceId = $(event.currentTarget).data('id');
+    renderExperienceData(experienceId);
+  });
+
+  window.renderExperienceData = function (id) {
+    $.ajax({
+      url: candidateUrl + id + '/edit-experience',
+      type: 'GET',
+      success: function success(result) {
+        if (result.success) {
+          $('#experienceId').val(result.data.id);
+          $('#editTitle').val(result.data.experience_title);
+          $('#editCompany').val(result.data.company);
+          $('#editCountry').val(result.data.country_id).trigger('change', [{
+            stateId: result.data.state_id,
+            cityId: result.data.city_id
+          }]);
+          $('#editStartDate').val(moment(result.data.start_date).format('YYYY-MM-DD'));
+          $('#editDescription').val(result.data.description);
+
+          if (result.data.currently_working == 1) {
+            $('#editWorking').prop('checked', true);
+            $('#editEndDate').val('');
+          } else {
+            $('#editWorking').prop('checked', false);
+            $('#editEndDate').val(moment(result.data.end_date).format('YYYY-MM-DD'));
+            $('#editRequiredText').removeClass('d-none');
+          }
+
+          if (result.data.currently_working == 1) {
+            $('#editEndDate').prop('disabled', true);
+          }
+
+          $('#editExperienceModal').appendTo('body').modal('show');
+        }
+      },
+      error: function error(result) {
+        displayErrorMessage(result.responseJSON.message);
+      }
+    });
+  };
+
+  $(document).on('submit', '#editExperienceForm', function (event) {
+    event.preventDefault();
+    processingBtn('#editExperienceForm', '#btnEditExperienceSave', 'loading');
+    var id = $('#experienceId').val();
+    $.ajax({
+      url: experienceUrl + id,
+      type: 'put',
+      data: $(this).serialize(),
+      success: function success(result) {
+        if (result.success) {
+          displaySuccessMessage(result.message);
+          $('#editExperienceModal').modal('hide');
+          setTimeout(function () {
+            location.reload();
+          }, 3000);
+          $('.candidate-experience-container').children('.candidate-experience').each(function () {
+            var candidateExperienceId = $(this).attr('data-id');
+
+            if (candidateExperienceId == result.data.id) {
+              $(this).remove();
+            }
+          });
+          renderExperienceTemplate(result.data.candidateExperience);
+        }
+      },
+      error: function error(result) {
+        displayErrorMessage(result.responseJSON.message);
+      },
+      complete: function complete() {
+        processingBtn('#editExperienceForm', '#btnEditExperienceSave');
+      }
+    });
+  });
+  $('#addExperienceModal').on('hidden.bs.modal', function () {
+    resetModalForm('#addNewExperienceForm', '#validationErrorsBox');
+    $('#countryId, #stateId, #cityId').val('');
+    $('#stateId, #cityId').empty();
+    $('#countryId').trigger('change.select2');
+  });
+  $('#addEducationModal').on('hidden.bs.modal', function () {
+    resetModalForm('#addNewEducationForm', '#validationErrorsBox');
+    $('#degreeLevelId').val('');
+    $('#degreeLevelId').select2({
+      'width': '100%',
+      'placeholder': 'Select Degree Level'
+    });
+    $('#educationCountryId, #educationStateId, #educationCityId').val('');
+    $('#educationStateId, #educationCityId').empty();
+    $('#educationCountryId').trigger('change.select2');
+  });
+  $(document).on('click', '.delete-experience', function (event) {
+    var experienceId = $(event.currentTarget).data('id');
+    deleteItem(experienceUrl + experienceId, 'Experience', '.candidate-experience-container', '.candidate-experience', '#notfoundExperience');
+  });
+
+  window.renderEducationTemplate = function (educationArray) {
+    var candidateEducationCount = $('.candidate-education-container .candidate-education:last').data('education-id') != undefined ? $('.candidate-education-container .candidate-education:last').data('experience-id') + 1 : 0;
+    var template = $.templates('#candidateEducationTemplate');
+    var data = {
+      candidateEducationNumber: candidateEducationCount,
+      id: educationArray.id,
+      degreeLevel: educationArray.degree_level.name,
+      degreeTitle: educationArray.degree_title,
+      year: educationArray.year,
+      country: educationArray.country,
+      institute: educationArray.institute
+    };
+    var stageTemplateHtml = template.render(data);
+    $('.candidate-education-container').append(stageTemplateHtml);
+    $('#notfoundEducation').addClass('d-none');
+  };
+
+  $(document).on('submit', '#addNewEducationForm', function (e) {
+    e.preventDefault();
+    processingBtn('#addNewEducationForm', '#btnEducationSave', 'loading');
+    $.ajax({
+      url: addEducationUrl,
+      type: 'POST',
+      data: $(this).serialize(),
+      success: function success(result) {
+        if (result.success) {
+          $('#notfoundEducation').addClass('d-none');
+          displaySuccessMessage(result.message);
+          $('#addEducationModal').modal('hide');
+          renderEducationTemplate(result.data);
+        }
+      },
+      error: function error(result) {
+        displayErrorMessage(result.responseJSON.message);
+      },
+      complete: function complete() {
+        processingBtn('#addNewEducationForm', '#btnEducationSave');
+      }
+    });
+  });
+  $(document).on('click', '.edit-education', function (event) {
+    var educationId = $(event.currentTarget).data('id');
+    renderEducationData(educationId);
+  });
+
+  window.renderEducationData = function (id) {
+    $.ajax({
+      url: candidateUrl + id + '/edit-education',
+      type: 'GET',
+      success: function success(result) {
+        if (result.success) {
+          $('#educationId').val(result.data.id);
+          $('#editDegreeLevel').val(result.data.degree_level.id).trigger('change');
+          $('#editDegreeTitle').val(result.data.degree_title);
+          $('#editEducationCountry').val(result.data.country_id).trigger('change', [{
+            stateId: result.data.state_id,
+            cityId: result.data.city_id
+          }]);
+          $('#editInstitute').val(result.data.institute);
+          $('#editResult').val(result.data.result);
+          $('#editYear').val(result.data.year).trigger('change');
+          $('#editEducationModal').appendTo('body').modal('show');
+        }
+      },
+      error: function error(result) {
+        displayErrorMessage(result.responseJSON.message);
+      }
+    });
+  };
+
+  $(document).on('submit', '#editEducationForm', function (event) {
+    event.preventDefault();
+    processingBtn('#editEducationForm', '#btnEditEducationSave', 'loading');
+    var id = $('#educationId').val();
+    $.ajax({
+      url: educationUrl + id,
+      type: 'put',
+      data: $(this).serialize(),
+      success: function success(result) {
+        if (result.success) {
+          displaySuccessMessage(result.message);
+          $('#editEducationModal').modal('hide');
+          setTimeout(function () {
+            location.reload();
+          }, 3000);
+          $('.candidate-education-container').children('.candidate-education').each(function () {
+            var candidateEducationId = $(this).attr('data-id');
+
+            if (candidateEducationId == result.data.id) {
+              $(this).remove();
+            }
+          });
+          renderEducationTemplate(result.data.candidateEducation);
+        }
+      },
+      error: function error(result) {
+        displayErrorMessage(result.responseJSON.message);
+      },
+      complete: function complete() {
+        processingBtn('#editEducationForm', '#btnEditEducationSave');
+      }
+    });
+  });
+  $('#editEducationModal').on('hidden.bs.modal', function () {
+    resetModalForm('#addNewEducationForm', '#validationErrorsBox');
+  });
+  $(document).on('click', '.delete-education', function (event) {
+    var educationId = $(event.currentTarget).data('id');
+    deleteItem(educationUrl + educationId, 'Education', '.candidate-education-container', '.candidate-education', '#notfoundEducation');
+  });
+
+  window.deleteItem = function (url, header, parent, child, selector) {
+    swal({
+      title: Lang.get('messages.common.delete') + ' !',
+      text: Lang.get('messages.common.are_you_sure_want_to_delete') + '"' + header + '" ?',
+      type: 'warning',
+      showCancelButton: true,
+      closeOnConfirm: false,
+      showLoaderOnConfirm: true,
+      confirmButtonColor: '#6777ef',
+      cancelButtonColor: '#d33',
+      cancelButtonText: Lang.get('messages.common.no'),
+      confirmButtonText: Lang.get('messages.common.yes')
+    }, function () {
+      deleteItemAjax(url, header, parent, child, selector);
+    });
+  };
+
+  function deleteItemAjax(url, header, parent, child, selector) {
+    $.ajax({
+      url: url,
+      type: 'DELETE',
+      dataType: 'json',
+      success: function success(obj) {
+        if (obj.success) {
+          $(parent).children(child).each(function () {
+            var templateId = $(this).attr('data-id');
+
+            if (templateId == obj.data) {
+              $(this).remove();
+            }
+          });
+
+          if ($(parent).children(child).length <= 0) {
+            $(selector).removeClass('d-none');
+          }
+        }
+
+        swal({
+          title: Lang.get('messages.common.deleted') + ' !',
+          text: header + Lang.get('messages.common.has_been_deleted'),
+          type: 'success',
+          confirmButtonColor: '#6777ef',
+          timer: 2000
+        });
+      },
+      error: function error(data) {
+        swal({
+          title: '',
+          text: data.responseJSON.message,
+          type: 'error',
+          confirmButtonColor: '#6777ef',
+          timer: 5000
+        });
+      }
+    });
+  }
+
+  $('#countryId, #educationCountryId, #editCountry, #editEducationCountry').on('change', function (e, paramData) {
+    var modalType = $(this).data('modal-type');
+    var modalTypeHasEdit = typeof $(this).data('is-edit') === 'undefined' ? false : true;
+    $.ajax({
+      url: companyStateUrl,
+      type: 'get',
+      dataType: 'json',
+      data: {
+        postal: $(this).val()
+      },
+      success: function success(data) {
+        $(modalType === 'experience' ? !modalTypeHasEdit ? '#stateId' : '#editState' : !modalTypeHasEdit ? '#educationStateId' : '#editEducationState').empty();
+        $(modalType === 'experience' ? !modalTypeHasEdit ? '#stateId' : '#editState' : !modalTypeHasEdit ? '#educationStateId' : '#editEducationState').append('<option value="" selected>Select State</option>');
+        $.each(data.data, function (i, v) {
+          $(modalType === 'experience' ? !modalTypeHasEdit ? '#stateId' : '#editState' : !modalTypeHasEdit ? '#educationStateId' : '#editEducationState').append($('<option></option>').attr('value', i).text(v));
+        });
+        if (modalTypeHasEdit) $(modalType === 'experience' ? '#editState' : '#editEducationState').val(typeof paramData !== 'undefined' ? paramData.stateId : '').trigger('change', typeof paramData !== 'undefined' ? [{
+          cityId: paramData.cityId
+        }] : '');
+      }
+    });
+  });
+  $('#stateId, #educationStateId, #editState, #editEducationState').on('change', function (e, paramData) {
+    var modalType = $(this).data('modal-type');
+    var modalTypeHasEdit = typeof $(this).data('is-edit') === 'undefined' ? false : true;
+    $.ajax({
+      url: companyCityUrl,
+      type: 'get',
+      dataType: 'json',
+      data: {
+        state: $(this).val(),
+        country: $(modalType === 'experience' ? !modalTypeHasEdit ? '#countryId' : '#editCountry' : !modalTypeHasEdit ? '#educationCountryId' : '#editEducationCountry').val()
+      },
+      success: function success(data) {
+        $(modalType === 'experience' ? !modalTypeHasEdit ? '#cityId' : '#editCity' : !modalTypeHasEdit ? '#educationCityId' : '#editEducationCity').empty();
+        $(modalType === 'experience' ? !modalTypeHasEdit ? '#cityId' : '#editCity' : !modalTypeHasEdit ? '#educationCityId' : '#editEducationCity').append('<option value="" selected>Select City</option>');
+        $.each(data.data, function (i, v) {
+          $(modalType === 'experience' ? !modalTypeHasEdit ? '#cityId' : '#editCity' : !modalTypeHasEdit ? '#educationCityId' : '#editEducationCity').append($('<option></option>').attr('value', i).text(v));
+        });
+        if (modalTypeHasEdit) $(modalType === 'experience' ? '#editCity' : '#editEducationCity').val(typeof paramData !== 'undefined' ? paramData.cityId : '').trigger('change.select2');
+      }
+    });
+  });
+});
+/******/ })()
+;

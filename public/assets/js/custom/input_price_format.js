@@ -1,1 +1,52 @@
-(()=>{"use strict";window.addCommas=function(e){for(var t=(e+="").split("."),r=t[0],i=t.length>1?"."+t[1]:"",n=/(\d+)(\d{3})/;n.test(r);)r=r.replace(n,"$1,$2");return r+i},window.getFormattedPrice=function(e){if(""!=e||e>0)return"number"!=typeof e&&(e=e.replace(/,/g,"")),addCommas(e)},window.priceFormatSelector=function(e){$(document).on("input keyup keydown keypress",e,(function(e){var t=$(this).val();if(""===t)$(this).val("");else{if(/[0-9]+(,[0-9]+)*$/.test(t))return $(this).val(getFormattedPrice(t)),!0;$(this).val(t.replace(/[^0-9 \,]/,""))}}))},priceFormatSelector(".price-input")})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+var __webpack_exports__ = {};
+/*!**********************************************************!*\
+  !*** ./resources/assets/js/custom/input_price_format.js ***!
+  \**********************************************************/
+
+
+window.addCommas = function (nStr) {
+  nStr += '';
+  var x = nStr.split('.');
+  var x1 = x[0];
+  var x2 = x.length > 1 ? '.' + x[1] : '';
+  var rgx = /(\d+)(\d{3})/;
+
+  while (rgx.test(x1)) {
+    x1 = x1.replace(rgx, '$1' + ',' + '$2');
+  }
+
+  return x1 + x2;
+};
+
+window.getFormattedPrice = function (price) {
+  if (price != '' || price > 0) {
+    if (typeof price !== 'number') {
+      price = price.replace(/,/g, '');
+    }
+
+    return addCommas(price);
+  }
+};
+
+window.priceFormatSelector = function (selector) {
+  $(document).on('input keyup keydown keypress', selector, function (event) {
+    var price = $(this).val();
+
+    if (price === '') {
+      $(this).val('');
+    } else {
+      if (/[0-9]+(,[0-9]+)*$/.test(price)) {
+        $(this).val(getFormattedPrice(price));
+        return true;
+      } else {
+        $(this).val(price.replace(/[^0-9 \,]/, ''));
+      }
+    }
+  });
+};
+
+priceFormatSelector('.price-input');
+/******/ })()
+;

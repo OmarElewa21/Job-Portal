@@ -1,1 +1,194 @@
-(()=>{"use strict";$(document).on("click",".editProfileModal",(function(e){renderProfileData()})),window.renderProfileData=function(){$.ajax({url:profileUrl,type:"GET",success:function(e){if(e.success){var a=e.data,o=e.data.candidate;$("#editUserId").val(a.id),$("#firstName").val(a.first_name),$("#lastName").val(a.last_name),$("#editEmail").val(a.email),$("#editphoneNumber").val(a.phone),isEmpty(o.candidate_url)?$("#editpreviewImage").attr("src",defaultImageUrl):$("#editpreviewImage").attr("src",o.candidate_url),$("#editProfileModal").appendTo("body").modal("show")}}})},$(document).on("change","#editprofile",(function(){isValidFile($(this),"#validationErrorsBoxCandidate")&&validatePhoto(this,"#editpreviewImage")})),window.validatePhoto=function(e,a){var o=!0;if(e.files&&e.files[0]){var t=new FileReader;t.onload=function(e){var t=new Image;t.src=e.target.result,t.onload=function(){if(t.height/t.width!=1)return $("#validationErrorsBoxCandidate").removeClass("d-none"),$("#validationErrorsBoxCandidate").html(Lang.get("messages.common.image_aspect_ratio")).show(),$("#btnPrEditSave").prop("disabled",!0),!1;$("#validationErrorsBoxCandidate").addClass("d-none"),$(a).attr("src",e.target.result),$("#btnPrEditSave").prop("disabled",!1),o=!0}},o&&(t.readAsDataURL(e.files[0]),$(a).show())}},$(document).on("submit","#editProfileForm",(function(e){e.preventDefault();var a=jQuery(this).find("#btnPrEditSave");a.button("loading"),$.ajax({url:profileUpdateUrl,type:"post",data:new FormData($(this)[0]),processData:!1,contentType:!1,success:function(e){$("#editProfileModal").modal("hide"),location.reload()},error:function(e){displayErrorMessage(e.responseJSON.message)},complete:function(){a.button("reset")}})})),$("#changePasswordModal").on("shown.bs.modal",(function(){$(this).find("[autofocus]").focus()})),$(document).on("submit","#changePasswordForm",(function(e){if(e.preventDefault(),!function(){var e=$("#pfCurrentPassword").val().trim(),a=$("#pfNewPassword").val().trim(),o=$("#pfNewConfirmPassword").val().trim();if(""==e||""==a||""==o)return $("#editPasswordValidationErrorsBox").show().html(Lang.get("messages.user.required_field_messages")),!1;return!0}())return!1;var a=jQuery(this).find("#btnPrPasswordEditSave");a.button("loading"),$.ajax({url:changePasswordUrl,type:"post",data:new FormData($(this)[0]),processData:!1,contentType:!1,success:function(e){e.success&&($("#changePasswordModal").modal("hide"),displaySuccessMessage(e.message))},error:function(e){displayErrorMessage(e.responseJSON.message)},complete:function(){a.button("reset")}})})),$(document).on("submit","#changeLanguageForm",(function(e){e.preventDefault();var a=jQuery(this).find("#btnLanguageChange");a.button("loading"),$.ajax({url:updateLanguageURL,type:"post",data:new FormData($(this)[0]),processData:!1,contentType:!1,success:function(e){$("#changePasswordModal").modal("hide"),displaySuccessMessage(e.message),setTimeout((function(){location.reload()}),1500)},error:function(e){manageAjaxErrors(e,"editProfileValidationErrorsBox")},complete:function(){a.button("reset")}})})),$("#editProfileModal").on("hidden.bs.modal",(function(){resetModalForm("#editProfileForm","#validationErrorsBoxCandidate"),$("#btnPrEditSave").prop("disabled",!1)})),$("#changePasswordModal").on("hidden.bs.modal",(function(){resetModalForm("#changePasswordForm","#editPasswordValidationErrorsBox")})),$(".changePasswordModal").on("click",(function(){$("#changePasswordModal").appendTo("body").modal("show")})),$(".changeLanguageModal").on("click",(function(){$("#changeLanguageModal").appendTo("body").modal("show")})),$("#changeLanguageModal").on("hidden.bs.modal",(function(){resetModalForm("#changeLanguageForm","#editProfileValidationErrorsBox"),$("#language").trigger("change.select2")})),$(document).ready((function(){$("#language").select2({width:"100%"})}))})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+var __webpack_exports__ = {};
+/*!********************************************************************!*\
+  !*** ./resources/assets/js/candidate_profile/candidate_profile.js ***!
+  \********************************************************************/
+ // open edit user profile model
+
+$(document).on('click', '.editProfileModal', function (event) {
+  renderProfileData();
+});
+
+window.renderProfileData = function () {
+  $.ajax({
+    url: profileUrl,
+    type: 'GET',
+    success: function success(result) {
+      if (result.success) {
+        var user = result.data;
+        var candidate = result.data.candidate;
+        $('#editUserId').val(user.id);
+        $('#firstName').val(user.first_name);
+        $('#lastName').val(user.last_name);
+        $('#editEmail').val(user.email);
+        $('#editphoneNumber').val(user.phone);
+
+        if (isEmpty(candidate.candidate_url)) {
+          $('#editpreviewImage').attr('src', defaultImageUrl);
+        } else {
+          $('#editpreviewImage').attr('src', candidate.candidate_url);
+        }
+
+        $('#editProfileModal').appendTo('body').modal('show');
+      }
+    }
+  });
+};
+
+$(document).on('change', '#editprofile', function () {
+  if (isValidFile($(this), '#validationErrorsBoxCandidate')) {
+    validatePhoto(this, '#editpreviewImage');
+  }
+});
+
+window.validatePhoto = function (input, selector) {
+  var displayPreview = true;
+
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+
+    reader.onload = function (e) {
+      var image = new Image();
+      image.src = e.target.result;
+
+      image.onload = function () {
+        if (image.height / image.width !== 1) {
+          $('#validationErrorsBoxCandidate').removeClass('d-none');
+          $('#validationErrorsBoxCandidate').html(Lang.get('messages.common.image_aspect_ratio')).show();
+          $('#btnPrEditSave').prop('disabled', true);
+          return false;
+        }
+
+        $('#validationErrorsBoxCandidate').addClass('d-none');
+        $(selector).attr('src', e.target.result);
+        $('#btnPrEditSave').prop('disabled', false);
+        displayPreview = true;
+      };
+    };
+
+    if (displayPreview) {
+      reader.readAsDataURL(input.files[0]);
+      $(selector).show();
+    }
+  }
+};
+
+$(document).on('submit', '#editProfileForm', function (event) {
+  event.preventDefault();
+  var loadingButton = jQuery(this).find('#btnPrEditSave');
+  loadingButton.button('loading');
+  $.ajax({
+    url: profileUpdateUrl,
+    type: 'post',
+    data: new FormData($(this)[0]),
+    processData: false,
+    contentType: false,
+    success: function success(result) {
+      $('#editProfileModal').modal('hide');
+      location.reload();
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    },
+    complete: function complete() {
+      loadingButton.button('reset');
+    }
+  });
+});
+$('#changePasswordModal').on('shown.bs.modal', function () {
+  $(this).find('[autofocus]').focus();
+});
+$(document).on('submit', '#changePasswordForm', function (event) {
+  event.preventDefault();
+  var isValidate = validatePassword();
+
+  if (!isValidate) {
+    return false;
+  }
+
+  var loadingButton = jQuery(this).find('#btnPrPasswordEditSave');
+  loadingButton.button('loading');
+  $.ajax({
+    url: changePasswordUrl,
+    type: 'post',
+    data: new FormData($(this)[0]),
+    processData: false,
+    contentType: false,
+    success: function success(result) {
+      if (result.success) {
+        $('#changePasswordModal').modal('hide');
+        displaySuccessMessage(result.message);
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    },
+    complete: function complete() {
+      loadingButton.button('reset');
+    }
+  });
+});
+
+function validatePassword() {
+  var currentPassword = $('#pfCurrentPassword').val().trim();
+  var password = $('#pfNewPassword').val().trim();
+  var confirmPassword = $('#pfNewConfirmPassword').val().trim();
+
+  if (currentPassword == '' || password == '' || confirmPassword == '') {
+    $('#editPasswordValidationErrorsBox').show().html(Lang.get('messages.user.required_field_messages'));
+    return false;
+  }
+
+  return true;
+}
+
+$(document).on('submit', '#changeLanguageForm', function (event) {
+  event.preventDefault();
+  var loadingButton = jQuery(this).find('#btnLanguageChange');
+  loadingButton.button('loading');
+  $.ajax({
+    url: updateLanguageURL,
+    type: 'post',
+    data: new FormData($(this)[0]),
+    processData: false,
+    contentType: false,
+    success: function success(result) {
+      $('#changePasswordModal').modal('hide');
+      displaySuccessMessage(result.message);
+      setTimeout(function () {
+        location.reload();
+      }, 1500);
+    },
+    error: function error(result) {
+      manageAjaxErrors(result, 'editProfileValidationErrorsBox');
+    },
+    complete: function complete() {
+      loadingButton.button('reset');
+    }
+  });
+});
+$('#editProfileModal').on('hidden.bs.modal', function () {
+  resetModalForm('#editProfileForm', '#validationErrorsBoxCandidate');
+  $('#btnPrEditSave').prop('disabled', false);
+});
+$('#changePasswordModal').on('hidden.bs.modal', function () {
+  resetModalForm('#changePasswordForm', '#editPasswordValidationErrorsBox');
+});
+$('.changePasswordModal').on('click', function () {
+  $('#changePasswordModal').appendTo('body').modal('show');
+});
+$('.changeLanguageModal').on('click', function () {
+  $('#changeLanguageModal').appendTo('body').modal('show');
+});
+$('#changeLanguageModal').on('hidden.bs.modal', function () {
+  resetModalForm('#changeLanguageForm', '#editProfileValidationErrorsBox');
+  $('#language').trigger('change.select2');
+});
+$(document).ready(function () {
+  $('#language').select2({
+    width: '100%'
+  });
+});
+/******/ })()
+;

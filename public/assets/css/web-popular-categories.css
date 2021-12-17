@@ -1,1 +1,57 @@
-.top-categories{background-image:linear-gradient(130deg,#6777ef,#3ae2f0);border:1px solid #e1e4fc;border-radius:8px;color:#fff;height:150px;overflow:hidden;position:absolute;width:100%;z-index:2}.category-listing{background-color:#fff;background-image:linear-gradient(130deg,#6777ef,#3ae2f0);border:1px solid #e1e4fc;border-radius:8px;width:22%}.category-listing,.category-listing:nth-child(5){color:#fff;display:inline-block;height:150px;margin:16px;overflow:hidden;position:relative;text-align:center}.category-listing:nth-child(5){background-color:transparent;background-image:none;border:none;border-radius:8px;width:100%}.category-listing:nth-child(5) .top-categories{background-image:linear-gradient(130deg,#6777ef,#3ae2f0);border-radius:8px;margin:auto;position:relative!important;width:22%}div#infyLoader{background:#fff;display:block;height:100vh;position:fixed;width:100vw;z-index:999}
+.top-categories {
+  height: 150px;
+  width: 100%;
+  position: absolute;
+  z-index: 2;
+  overflow: hidden;
+  border: 1px solid #e1e4fc;
+  border-radius: 8px;
+  background-image: linear-gradient(130deg, #6777ef, #3ae2f0);
+  color: #fff;
+}
+
+.category-listing {
+  text-align: center;
+  border: 1px solid #e1e4fc;
+  display: inline-block;
+  margin: 16px;
+  border-radius: 8px;
+  width: 22%;
+  height: 150px;
+  background-color: #ffffff;
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  background-image: linear-gradient(130deg, #6777ef, #3ae2f0);
+}
+
+.category-listing:nth-child(5) {
+  text-align: center;
+  border: none;
+  display: inline-block;
+  margin: 16px;
+  border-radius: 8px;
+  width: 100%;
+  height: 150px;
+  background-color: transparent;
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  background-image: none;
+}
+.category-listing:nth-child(5) .top-categories {
+  background-image: linear-gradient(130deg, #6777ef, #3ae2f0);
+  width: 22%;
+  margin: auto;
+  position: relative !important;
+  border-radius: 8px;
+}
+
+div#infyLoader {
+  display: block;
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  z-index: 999;
+  background: white;
+}

@@ -1,1 +1,180 @@
-(()=>{"use strict";$(document).on("click",".addJobTypeModal",(function(){$("#addJobTypeModal").appendTo("body").modal("show")})),$(document).on("submit","#addJobTypeForm",(function(e){if(e.preventDefault(),!checkSummerNoteEmpty("#jobTypeDescription","Description field is required.",1))return!0;processingBtn("#addJobTypeForm","#jobTypeBtnSave","loading"),$.ajax({url:jobTypeSaveUrl,type:"POST",data:$(this).serialize(),success:function(e){e.success&&(displaySuccessMessage(e.message),$("#addJobTypeModal").modal("hide"),window.livewire.emit("refresh"))},error:function(e){displayErrorMessage(e.responseJSON.message)},complete:function(){processingBtn("#addJobTypeForm","#jobTypeBtnSave")}})})),$(document).on("click",".edit-btn",(function(e){if(!ajaxCallIsRunning){ajaxCallInProgress();var o=$(e.currentTarget).attr("data-id");renderData(o)}})),window.renderData=function(e){$.ajax({url:jobTypeUrl+e+"/edit",type:"GET",success:function(e){if(e.success){var o=document.createElement("textarea");o.innerHTML=e.data.name,$("#jobTypeId").val(e.data.id),$("#editName").val(o.value),$("#editDescription").summernote("code",e.data.description),$("#editModal").appendTo("body").modal("show"),ajaxCallCompleted()}},error:function(e){displayErrorMessage(e.responseJSON.message)}})},$(document).on("submit","#editForm",(function(e){if(e.preventDefault(),!checkSummerNoteEmpty("#editDescription","Description field is required.",1))return!0;processingBtn("#editForm","#btnEditSave","loading");var o=$("#jobTypeId").val();$.ajax({url:jobTypeUrl+o,type:"put",data:$(this).serialize(),success:function(e){e.success&&(displaySuccessMessage(e.message),$("#editModal").modal("hide"),window.livewire.emit("refresh"))},error:function(e){displayErrorMessage(e.responseJSON.message)},complete:function(){processingBtn("#editForm","#btnEditSave")}})})),$(document).on("click",".show-btn",(function(e){if(!ajaxCallIsRunning){ajaxCallInProgress();var o=$(e.currentTarget).attr("data-id");$.ajax({url:jobTypeUrl+o,type:"GET",success:function(e){if(e.success){$("#showName").html(""),$("#showDescription").html(""),$("#showName").append(e.data.name);var o=document.createElement("textarea");o.innerHTML=e.data.description,$("#showDescription").append(o.value),$("#showModal").appendTo("body").modal("show"),ajaxCallCompleted()}},error:function(e){displayErrorMessage(e.responseJSON.message)}})}})),$(document).on("click",".delete-btn",(function(e){var o=$(e.currentTarget).attr("data-id");swal({title:Lang.get("messages.common.delete")+" !",text:Lang.get("messages.common.are_you_sure_want_to_delete")+'"'+Lang.get("messages.job_type.show_job_type")+'" ?',type:"warning",showCancelButton:!0,closeOnConfirm:!1,showLoaderOnConfirm:!0,confirmButtonColor:"#6777ef",cancelButtonColor:"#d33",cancelButtonText:Lang.get("messages.common.no"),confirmButtonText:Lang.get("messages.common.yes")},(function(){$.ajax({url:jobTypeUrl+o,type:"DELETE",success:function(e){e.success&&window.livewire.emit("refresh"),swal({title:Lang.get("messages.common.deleted")+" !",text:Lang.get("messages.job_type.show_job_type")+Lang.get("messages.common.has_been_deleted"),type:"success",confirmButtonColor:"#6777ef",timer:2e3})},error:function(e){swal({title:"",text:e.responseJSON.message,type:"error",confirmButtonColor:"#6777ef",timer:2e3})}})}))})),$("#addJobTypeModal").on("hidden.bs.modal",(function(){resetModalForm("#addJobTypeForm","#jobTypeValidationErrorsBox"),$("#jobTypeDescription").summernote("code","")})),$("#editModal").on("hidden.bs.modal",(function(){resetModalForm("#editForm","#editValidationErrorsBox")})),$("#jobTypeDescription, #editDescription").summernote({minHeight:200,height:200,toolbar:[["style",["bold","italic","underline","clear"]],["font",["strikethrough"]],["para",["paragraph"]]]})})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+var __webpack_exports__ = {};
+/*!****************************************************!*\
+  !*** ./resources/assets/js/job_types/job_types.js ***!
+  \****************************************************/
+
+
+$(document).on('click', '.addJobTypeModal', function () {
+  $('#addJobTypeModal').appendTo('body').modal('show');
+});
+$(document).on('submit', '#addJobTypeForm', function (e) {
+  e.preventDefault();
+
+  if (!checkSummerNoteEmpty('#jobTypeDescription', 'Description field is required.', 1)) {
+    return true;
+  }
+
+  processingBtn('#addJobTypeForm', '#jobTypeBtnSave', 'loading');
+  $.ajax({
+    url: jobTypeSaveUrl,
+    type: 'POST',
+    data: $(this).serialize(),
+    success: function success(result) {
+      if (result.success) {
+        displaySuccessMessage(result.message);
+        $('#addJobTypeModal').modal('hide');
+        window.livewire.emit('refresh');
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    },
+    complete: function complete() {
+      processingBtn('#addJobTypeForm', '#jobTypeBtnSave');
+    }
+  });
+});
+$(document).on('click', '.edit-btn', function (event) {
+  if (ajaxCallIsRunning) {
+    return;
+  }
+
+  ajaxCallInProgress();
+  var jobTypeId = $(event.currentTarget).attr('data-id');
+  renderData(jobTypeId);
+});
+
+window.renderData = function (id) {
+  $.ajax({
+    url: jobTypeUrl + id + '/edit',
+    type: 'GET',
+    success: function success(result) {
+      if (result.success) {
+        var element = document.createElement('textarea');
+        element.innerHTML = result.data.name;
+        $('#jobTypeId').val(result.data.id);
+        $('#editName').val(element.value);
+        $('#editDescription').summernote('code', result.data.description);
+        $('#editModal').appendTo('body').modal('show');
+        ajaxCallCompleted();
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    }
+  });
+};
+
+$(document).on('submit', '#editForm', function (event) {
+  event.preventDefault();
+
+  if (!checkSummerNoteEmpty('#editDescription', 'Description field is required.', 1)) {
+    return true;
+  }
+
+  processingBtn('#editForm', '#btnEditSave', 'loading');
+  var id = $('#jobTypeId').val();
+  $.ajax({
+    url: jobTypeUrl + id,
+    type: 'put',
+    data: $(this).serialize(),
+    success: function success(result) {
+      if (result.success) {
+        displaySuccessMessage(result.message);
+        $('#editModal').modal('hide');
+        window.livewire.emit('refresh');
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    },
+    complete: function complete() {
+      processingBtn('#editForm', '#btnEditSave');
+    }
+  });
+});
+$(document).on('click', '.show-btn', function (event) {
+  if (ajaxCallIsRunning) {
+    return;
+  }
+
+  ajaxCallInProgress();
+  var jobTypeId = $(event.currentTarget).attr('data-id');
+  $.ajax({
+    url: jobTypeUrl + jobTypeId,
+    type: 'GET',
+    success: function success(result) {
+      if (result.success) {
+        $('#showName').html('');
+        $('#showDescription').html('');
+        $('#showName').append(result.data.name);
+        var element = document.createElement('textarea');
+        element.innerHTML = result.data.description;
+        $('#showDescription').append(element.value);
+        $('#showModal').appendTo('body').modal('show');
+        ajaxCallCompleted();
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    }
+  });
+});
+$(document).on('click', '.delete-btn', function (event) {
+  var jobTypeId = $(event.currentTarget).attr('data-id');
+  swal({
+    title: Lang.get('messages.common.delete') + ' !',
+    text: Lang.get('messages.common.are_you_sure_want_to_delete') + '"' + Lang.get('messages.job_type.show_job_type') + '" ?',
+    type: 'warning',
+    showCancelButton: true,
+    closeOnConfirm: false,
+    showLoaderOnConfirm: true,
+    confirmButtonColor: '#6777ef',
+    cancelButtonColor: '#d33',
+    cancelButtonText: Lang.get('messages.common.no'),
+    confirmButtonText: Lang.get('messages.common.yes')
+  }, function () {
+    $.ajax({
+      url: jobTypeUrl + jobTypeId,
+      type: 'DELETE',
+      success: function success(result) {
+        if (result.success) {
+          window.livewire.emit('refresh');
+        }
+
+        swal({
+          title: Lang.get('messages.common.deleted') + ' !',
+          text: Lang.get('messages.job_type.show_job_type') + Lang.get('messages.common.has_been_deleted'),
+          type: 'success',
+          confirmButtonColor: '#6777ef',
+          timer: 2000
+        });
+      },
+      error: function error(data) {
+        swal({
+          title: '',
+          text: data.responseJSON.message,
+          type: 'error',
+          confirmButtonColor: '#6777ef',
+          timer: 2000
+        });
+      }
+    });
+  });
+});
+$('#addJobTypeModal').on('hidden.bs.modal', function () {
+  resetModalForm('#addJobTypeForm', '#jobTypeValidationErrorsBox');
+  $('#jobTypeDescription').summernote('code', '');
+});
+$('#editModal').on('hidden.bs.modal', function () {
+  resetModalForm('#editForm', '#editValidationErrorsBox');
+});
+$('#jobTypeDescription, #editDescription').summernote({
+  minHeight: 200,
+  height: 200,
+  toolbar: [['style', ['bold', 'italic', 'underline', 'clear']], ['font', ['strikethrough']], ['para', ['paragraph']]]
+});
+/******/ })()
+;

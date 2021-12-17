@@ -1,1 +1,200 @@
-(()=>{"use strict";$(document).on("change","#logo",(function(){isValidFile($(this),"#validationErrorsBox")&&displayPhoto(this,"#logoPreview"),$("#validationErrorsBox").delay(5e3).slideUp(300)})),$(document).on("change","#footerLogo",(function(){isValidFile($(this),"#validationErrorsBox")&&displayPhoto(this,"#footerLogoPreview"),$("#validationErrorsBox").delay(5e3).slideUp(300)})),window.displayFavicon=function(e,t){var o=!0;if(e.files&&e.files[0]){var a=new FileReader;a.onload=function(e){var a=new Image;a.src=e.target.result,a.onload=function(){if(!(16==a.height&&16==a.width||32==a.height&&32==a.width))return $("#favicon").val(""),$("#validationErrorsBox").removeClass("d-none"),$("#validationErrorsBox").html("The image must be of pixel 16 x 16 and 32 x 32.").show(),!1;$(t).attr("src",e.target.result),o=!0}},o&&(a.readAsDataURL(e.files[0]),$(t).show())}},window.isValidFavicon=function(e,t){var o=$(e).val().split(".").pop().toLowerCase();return-1==$.inArray(o,["gif","png","ico"])?($(e).val(""),$(t).removeClass("d-none"),$(t).html("The image must be a file of type: gif, ico, png.").show(),!1):($(t).hide(),!0)},$(document).on("change","#favicon",(function(){$("#validationErrorsBox").addClass("d-none"),isValidFavicon($(this),"#validationErrorsBox")&&displayFavicon(this,"#faviconPreview"),$("#validationErrorsBox").delay(5e3).slideUp(300)})),$("#facebookUrl").keyup((function(){this.value=this.value.toLowerCase()})),$("#twitterUrl").keyup((function(){this.value=this.value.toLowerCase()})),$("#googleUrl").keyup((function(){this.value=this.value.toLowerCase()})),$("#linkedInUrl").keyup((function(){this.value=this.value.toLowerCase()})),$("#editFrontSettingForm").submit((function(){if(""!==$("#error-msg").text())return $("#phoneNumber").focus(),!1})),$(document).on("submit","#editGeneralForm",(function(e){e.preventDefault(),$("#companyUrl").focus();var t=$("#companyUrl").val(),o=new RegExp(/^(http|https)?:\/\/[a-zA-Z0-9-\.]+\.[a-z]{2,4}/);return""!=t&&!t.match(o)?(displayErrorMessage("Please enter a valid Company Url"),!1):($("#editGeneralForm")[0].submit(),!0)})),$(document).on("submit","#editForm",(function(e){e.preventDefault(),$("#editForm").find("input:text:visible:first").focus();var t=$("#facebookUrl").val(),o=$("#twitterUrl").val(),a=$("#googlePlusUrl").val(),i=$("#linkedInUrl").val(),n=new RegExp(/^(https?:\/\/)?((m{1}\.)?)?((w{2,3}\.)?)facebook.[a-z]{2,3}\/?.*/i),r=new RegExp(/^(https?:\/\/)?((m{1}\.)?)?((w{2,3}\.)?)twitter\.[a-z]{2,3}\/?.*/i),s=new RegExp(/^(https?:\/\/)?(plus\.)?(google\.[a-z]{2,3})\/?(([a-zA-Z 0-9._])?).*/i),l=new RegExp(/^(https?:\/\/)?((w{2,3}\.)?)linkedin\.[a-z]{2,3}\/?.*/i);return""!=t&&!t.match(n)?(displayErrorMessage("Please enter a valid Facebook Url"),!1):""!=o&&!o.match(r)?(displayErrorMessage("Please enter a valid Twitter Url"),!1):""!=a&&!a.match(s)?(displayErrorMessage("Please enter a valid Google Plus Url"),!1):""!=i&&!i.match(l)?(displayErrorMessage("Please enter a valid Linkedin Url"),!1):($("#editForm")[0].submit(),!0)})),$("#aboutUs").summernote({minHeight:200,height:200,toolbar:[["style",["bold","italic","underline","clear"]],["font",["strikethrough"]],["para",["paragraph"]]]}),$(document).on("submit","#aboutUsForm",(function(e){if(e.preventDefault(),!checkSummerNoteEmpty("#aboutUs","About Us field is required."))return!1;$("#aboutUsForm")[0].submit()})),$(document).on("click","#btnSaveEnvData",(function(e){e.preventDefault(),swal({title:Lang.get("messages.setting.configuration_update")+" !",text:Lang.get("messages.setting.update_application_configuration"),type:"warning",showCancelButton:!0,closeOnConfirm:!1,showLoaderOnConfirm:!0,confirmButtonColor:"#6777ef",cancelButtonColor:"#d33",cancelButtonText:Lang.get("messages.common.no"),confirmButtonText:Lang.get("messages.common.yes")},(function(){$("#envUpdateForm")[0].submit()}))})),$(document).on("change","#enableEdit",(function(){$(this).prop("checked")?($("#envUpdateForm").find("input:text").attr("disabled",!1),$("#enableCookie").attr("disabled",!1),$("#btnSaveEnvData").attr("disabled",!1),$("#envUpdateText").text(disableEditText)):($("#envUpdateForm").find("input:text").attr("disabled",!0),$("#enableCookie").attr("disabled",!0),$("#btnSaveEnvData").attr("disabled",!0),$("#envUpdateText").text(enableEditText))})),$(document).on("change","#enableCookie",(function(){$(this).prop("checked")?$("#enableCookieText").text(disableCookie):$("#enableCookieText").text(enableCookie)}))})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+var __webpack_exports__ = {};
+/*!**************************************************!*\
+  !*** ./resources/assets/js/settings/settings.js ***!
+  \**************************************************/
+
+
+$(document).on('change', '#logo', function () {
+  if (isValidFile($(this), '#validationErrorsBox')) {
+    displayPhoto(this, '#logoPreview');
+  }
+
+  $('#validationErrorsBox').delay(5000).slideUp(300);
+});
+$(document).on('change', '#footerLogo', function () {
+  if (isValidFile($(this), '#validationErrorsBox')) {
+    displayPhoto(this, '#footerLogoPreview');
+  }
+
+  $('#validationErrorsBox').delay(5000).slideUp(300);
+});
+
+window.displayFavicon = function (input, selector) {
+  var displayPreview = true;
+
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+
+    reader.onload = function (e) {
+      var image = new Image();
+      image.src = e.target.result;
+
+      image.onload = function () {
+        if ((image.height != 16 || image.width != 16) && (image.height != 32 || image.width != 32)) {
+          $('#favicon').val('');
+          $('#validationErrorsBox').removeClass('d-none');
+          $('#validationErrorsBox').html('The image must be of pixel 16 x 16 and 32 x 32.').show();
+          return false;
+        }
+
+        $(selector).attr('src', e.target.result);
+        displayPreview = true;
+      };
+    };
+
+    if (displayPreview) {
+      reader.readAsDataURL(input.files[0]);
+      $(selector).show();
+    }
+  }
+};
+
+window.isValidFavicon = function (inputSelector, validationMessageSelector) {
+  var ext = $(inputSelector).val().split('.').pop().toLowerCase();
+
+  if ($.inArray(ext, ['gif', 'png', 'ico']) == -1) {
+    $(inputSelector).val('');
+    $(validationMessageSelector).removeClass('d-none');
+    $(validationMessageSelector).html('The image must be a file of type: gif, ico, png.').show();
+    return false;
+  }
+
+  $(validationMessageSelector).hide();
+  return true;
+};
+
+$(document).on('change', '#favicon', function () {
+  $('#validationErrorsBox').addClass('d-none');
+
+  if (isValidFavicon($(this), '#validationErrorsBox')) {
+    displayFavicon(this, '#faviconPreview');
+  }
+
+  $('#validationErrorsBox').delay(5000).slideUp(300);
+});
+$('#facebookUrl').keyup(function () {
+  this.value = this.value.toLowerCase();
+});
+$('#twitterUrl').keyup(function () {
+  this.value = this.value.toLowerCase();
+});
+$('#googleUrl').keyup(function () {
+  this.value = this.value.toLowerCase();
+});
+$('#linkedInUrl').keyup(function () {
+  this.value = this.value.toLowerCase();
+});
+$('#editFrontSettingForm').submit(function () {
+  if ($('#error-msg').text() !== '') {
+    $('#phoneNumber').focus();
+    return false;
+  }
+});
+$(document).on('submit', '#editGeneralForm', function (event) {
+  event.preventDefault();
+  $('#companyUrl').focus();
+  var companyUrl = $('#companyUrl').val();
+  var companyUrlExp = new RegExp(/^(http|https)?:\/\/[a-zA-Z0-9-\.]+\.[a-z]{2,4}/);
+  var companyUrlCheck = companyUrl == '' ? true : companyUrl.match(companyUrlExp) ? true : false;
+
+  if (!companyUrlCheck) {
+    displayErrorMessage('Please enter a valid Company Url');
+    return false;
+  }
+
+  $('#editGeneralForm')[0].submit();
+  return true;
+});
+$(document).on('submit', '#editForm', function (event) {
+  event.preventDefault();
+  $('#editForm').find('input:text:visible:first').focus();
+  var facebookUrl = $('#facebookUrl').val();
+  var twitterUrl = $('#twitterUrl').val();
+  var googlePlusUrl = $('#googlePlusUrl').val();
+  var linkedInUrl = $('#linkedInUrl').val();
+  var facebookExp = new RegExp(/^(https?:\/\/)?((m{1}\.)?)?((w{2,3}\.)?)facebook.[a-z]{2,3}\/?.*/i);
+  var twitterExp = new RegExp(/^(https?:\/\/)?((m{1}\.)?)?((w{2,3}\.)?)twitter\.[a-z]{2,3}\/?.*/i);
+  var googlePlusExp = new RegExp(/^(https?:\/\/)?(plus\.)?(google\.[a-z]{2,3})\/?(([a-zA-Z 0-9._])?).*/i);
+  var linkedInExp = new RegExp(/^(https?:\/\/)?((w{2,3}\.)?)linkedin\.[a-z]{2,3}\/?.*/i);
+  var facebookCheck = facebookUrl == '' ? true : facebookUrl.match(facebookExp) ? true : false;
+
+  if (!facebookCheck) {
+    displayErrorMessage('Please enter a valid Facebook Url');
+    return false;
+  }
+
+  var twitterCheck = twitterUrl == '' ? true : twitterUrl.match(twitterExp) ? true : false;
+
+  if (!twitterCheck) {
+    displayErrorMessage('Please enter a valid Twitter Url');
+    return false;
+  }
+
+  var googlePlusCheck = googlePlusUrl == '' ? true : googlePlusUrl.match(googlePlusExp) ? true : false;
+
+  if (!googlePlusCheck) {
+    displayErrorMessage('Please enter a valid Google Plus Url');
+    return false;
+  }
+
+  var linkedInCheck = linkedInUrl == '' ? true : linkedInUrl.match(linkedInExp) ? true : false;
+
+  if (!linkedInCheck) {
+    displayErrorMessage('Please enter a valid Linkedin Url');
+    return false;
+  }
+
+  $('#editForm')[0].submit();
+  return true;
+});
+$('#aboutUs').summernote({
+  minHeight: 200,
+  height: 200,
+  toolbar: [['style', ['bold', 'italic', 'underline', 'clear']], ['font', ['strikethrough']], ['para', ['paragraph']]]
+});
+$(document).on('submit', '#aboutUsForm', function (event) {
+  event.preventDefault();
+
+  if (!checkSummerNoteEmpty('#aboutUs', 'About Us field is required.')) {
+    return false;
+  }
+
+  $('#aboutUsForm')[0].submit();
+});
+$(document).on('click', '#btnSaveEnvData', function (event) {
+  event.preventDefault();
+  swal({
+    title: Lang.get('messages.setting.configuration_update') + ' !',
+    text: Lang.get('messages.setting.update_application_configuration'),
+    type: 'warning',
+    showCancelButton: true,
+    closeOnConfirm: false,
+    showLoaderOnConfirm: true,
+    confirmButtonColor: '#6777ef',
+    cancelButtonColor: '#d33',
+    cancelButtonText: Lang.get('messages.common.no'),
+    confirmButtonText: Lang.get('messages.common.yes')
+  }, function () {
+    $('#envUpdateForm')[0].submit();
+  });
+});
+$(document).on('change', '#enableEdit', function () {
+  if ($(this).prop('checked')) {
+    $('#envUpdateForm').find('input:text').attr('disabled', false);
+    $('#enableCookie').attr('disabled', false);
+    $('#btnSaveEnvData').attr('disabled', false);
+    $('#envUpdateText').text(disableEditText);
+  } else {
+    $('#envUpdateForm').find('input:text').attr('disabled', true);
+    $('#enableCookie').attr('disabled', true);
+    $('#btnSaveEnvData').attr('disabled', true);
+    $('#envUpdateText').text(enableEditText);
+  }
+});
+$(document).on('change', '#enableCookie', function () {
+  if ($(this).prop('checked')) $('#enableCookieText').text(disableCookie);else $('#enableCookieText').text(enableCookie);
+});
+/******/ })()
+;

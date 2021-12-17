@@ -1,1 +1,152 @@
-(()=>{"use strict";$(document).on("click",".addFaqModal",(function(){$("#addModal").appendTo("body").modal("show")})),$(document).on("submit","#addNewForm",(function(e){if(e.preventDefault(),!checkSummerNoteEmpty("#description","Description field is required.",1))return!0;processingBtn("#addNewForm","#btnSave","loading"),$.ajax({url:faqSaveUrl,type:"POST",data:$(this).serialize(),success:function(e){e.success&&(displaySuccessMessage(e.message),$("#addModal").modal("hide"),window.livewire.emit("refresh"))},error:function(e){displayErrorMessage(e.responseJSON.message)},complete:function(){processingBtn("#addNewForm","#btnSave")}})})),$(document).on("click",".edit-btn",(function(e){var t=$(e.currentTarget).data("id");renderData(t)})),window.renderData=function(e){$.ajax({url:faqUrl+e+"/edit",type:"GET",success:function(e){if(e.success){var t=document.createElement("textarea");t.innerHTML=e.data.title,$("#faqId").val(e.data.id),$("#editTitle").val(t.value),$("#editDescription").summernote("code",e.data.description),$("#editModal").appendTo("body").modal("show")}},error:function(e){displayErrorMessage(e.responseJSON.message)}})},$(document).on("submit","#editForm",(function(e){if(e.preventDefault(),!checkSummerNoteEmpty("#editDescription","Description field is required.",1))return!0;processingBtn("#editForm","#btnEditSave","loading");var t=$("#faqId").val();$.ajax({url:faqUrl+t,type:"put",data:$(this).serialize(),success:function(e){e.success&&(displaySuccessMessage(e.message),$("#editModal").modal("hide"),window.livewire.emit("refresh"))},error:function(e){displayErrorMessage(e.responseJSON.message)},complete:function(){processingBtn("#editForm","#btnEditSave")}})})),$(document).on("click",".show-btn",(function(e){var t=$(e.currentTarget).data("id");$.ajax({url:faqUrl+t,type:"GET",success:function(e){if(e.success){$("#showName").html(""),$("#showDescription").html(""),$("#showName").append(e.data.title);var t=document.createElement("textarea");t.innerHTML=e.data.description,$("#showDescription").append(t.value),$("#showModal").appendTo("body").modal("show")}},error:function(e){displayErrorMessage(e.responseJSON.message)}})})),$(document).on("click",".delete-btn",(function(e){var t=$(e.currentTarget).attr("data-id");swal({title:Lang.get("messages.common.delete")+" !",text:Lang.get("messages.common.are_you_sure_want_to_delete")+'"'+Lang.get("messages.faq.faq")+'" ?',type:"warning",showCancelButton:!0,closeOnConfirm:!1,showLoaderOnConfirm:!0,confirmButtonColor:"#6777ef",cancelButtonColor:"#d33",cancelButtonText:Lang.get("messages.common.no"),confirmButtonText:Lang.get("messages.common.yes")},(function(){window.livewire.emit("deleteFaq",t)}))})),document.addEventListener("delete",(function(){swal({title:Lang.get("messages.common.deleted")+" !",text:Lang.get("messages.faq.faq")+Lang.get("messages.common.has_been_deleted"),type:"success",confirmButtonColor:"#6777ef",timer:2e3})})),$("#addModal").on("hidden.bs.modal",(function(){resetModalForm("#addNewForm","#validationErrorsBox"),$("#description").summernote("code","")})),$("#editModal").on("hidden.bs.modal",(function(){resetModalForm("#editForm","#editValidationErrorsBox")})),$("#description, #editDescription").summernote({minHeight:200,height:200,toolbar:[["style",["bold","italic","underline","clear"]],["font",["strikethrough"]],["para",["paragraph"]]]})})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+var __webpack_exports__ = {};
+/*!******************************************!*\
+  !*** ./resources/assets/js/faqs/faqs.js ***!
+  \******************************************/
+
+
+$(document).on('click', '.addFaqModal', function () {
+  $('#addModal').appendTo('body').modal('show');
+});
+$(document).on('submit', '#addNewForm', function (e) {
+  e.preventDefault();
+
+  if (!checkSummerNoteEmpty('#description', 'Description field is required.', 1)) {
+    return true;
+  }
+
+  processingBtn('#addNewForm', '#btnSave', 'loading');
+  $.ajax({
+    url: faqSaveUrl,
+    type: 'POST',
+    data: $(this).serialize(),
+    success: function success(result) {
+      if (result.success) {
+        displaySuccessMessage(result.message);
+        $('#addModal').modal('hide');
+        window.livewire.emit('refresh');
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    },
+    complete: function complete() {
+      processingBtn('#addNewForm', '#btnSave');
+    }
+  });
+});
+$(document).on('click', '.edit-btn', function (event) {
+  var faqId = $(event.currentTarget).data('id');
+  renderData(faqId);
+});
+
+window.renderData = function (id) {
+  $.ajax({
+    url: faqUrl + id + '/edit',
+    type: 'GET',
+    success: function success(result) {
+      if (result.success) {
+        var element = document.createElement('textarea');
+        element.innerHTML = result.data.title;
+        $('#faqId').val(result.data.id);
+        $('#editTitle').val(element.value);
+        $('#editDescription').summernote('code', result.data.description);
+        $('#editModal').appendTo('body').modal('show');
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    }
+  });
+};
+
+$(document).on('submit', '#editForm', function (event) {
+  event.preventDefault();
+
+  if (!checkSummerNoteEmpty('#editDescription', 'Description field is required.', 1)) {
+    return true;
+  }
+
+  processingBtn('#editForm', '#btnEditSave', 'loading');
+  var id = $('#faqId').val();
+  $.ajax({
+    url: faqUrl + id,
+    type: 'put',
+    data: $(this).serialize(),
+    success: function success(result) {
+      if (result.success) {
+        displaySuccessMessage(result.message);
+        $('#editModal').modal('hide');
+        window.livewire.emit('refresh');
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    },
+    complete: function complete() {
+      processingBtn('#editForm', '#btnEditSave');
+    }
+  });
+});
+$(document).on('click', '.show-btn', function (event) {
+  var faqId = $(event.currentTarget).data('id');
+  $.ajax({
+    url: faqUrl + faqId,
+    type: 'GET',
+    success: function success(result) {
+      if (result.success) {
+        $('#showName').html('');
+        $('#showDescription').html('');
+        $('#showName').append(result.data.title);
+        var element = document.createElement('textarea');
+        element.innerHTML = result.data.description;
+        $('#showDescription').append(element.value);
+        $('#showModal').appendTo('body').modal('show');
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    }
+  });
+});
+$(document).on('click', '.delete-btn', function (event) {
+  var faqId = $(event.currentTarget).attr('data-id');
+  swal({
+    title: Lang.get('messages.common.delete') + ' !',
+    text: Lang.get('messages.common.are_you_sure_want_to_delete') + '"' + Lang.get('messages.faq.faq') + '" ?',
+    type: 'warning',
+    showCancelButton: true,
+    closeOnConfirm: false,
+    showLoaderOnConfirm: true,
+    confirmButtonColor: '#6777ef',
+    cancelButtonColor: '#d33',
+    cancelButtonText: Lang.get('messages.common.no'),
+    confirmButtonText: Lang.get('messages.common.yes')
+  }, function () {
+    window.livewire.emit('deleteFaq', faqId);
+  });
+});
+document.addEventListener('delete', function () {
+  swal({
+    title: Lang.get('messages.common.deleted') + ' !',
+    text: Lang.get('messages.faq.faq') + Lang.get('messages.common.has_been_deleted'),
+    type: 'success',
+    confirmButtonColor: '#6777ef',
+    timer: 2000
+  });
+});
+$('#addModal').on('hidden.bs.modal', function () {
+  resetModalForm('#addNewForm', '#validationErrorsBox');
+  $('#description').summernote('code', '');
+});
+$('#editModal').on('hidden.bs.modal', function () {
+  resetModalForm('#editForm', '#editValidationErrorsBox');
+});
+$('#description, #editDescription').summernote({
+  minHeight: 200,
+  height: 200,
+  toolbar: [['style', ['bold', 'italic', 'underline', 'clear']], ['font', ['strikethrough']], ['para', ['paragraph']]]
+});
+/******/ })()
+;

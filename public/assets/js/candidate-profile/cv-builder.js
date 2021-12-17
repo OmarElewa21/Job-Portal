@@ -1,1 +1,307 @@
-(()=>{"use strict";$(document).ready((function(){renderCandidateData(),randerCVTemplate(),$("#skillId,#candidateCountryId,#candidateStateId,#candidateCityId").select2({width:"100%"}),$("#candidateCountryId").on("change",(function(){$.ajax({url:companyStateUrl,type:"get",dataType:"json",data:{postal:$(this).val()},success:function(e){$("#candidateStateId").empty(),$("#candidateStateId").append($('<option value="" selected>Select State</option>')),$.each(e.data,(function(e,t){$("#candidateStateId").append($("<option></option>").attr("value",e).text(t))})),isEditProfile&&""!=stateId&&$("#candidateStateId").val(stateId).trigger("change"),null==$("#candidateStateId").val()&&($("#candidateStateId").find('option[value=""]').remove(),$("#candidateStateId").prepend($('<option value="" selected>Select State</option>'))),null==$("#candidateCityId").val()&&$("#candidateCityId").prepend($('<option value="" selected>Select City</option>'))}})})),$("#candidateStateId").on("change",(function(){$.ajax({url:companyCityUrl,type:"get",dataType:"json",data:{state:$(this).val(),country:$("#candidateCountryId").val()},success:function(e){$("#candidateCityId").empty(),$.each(e.data,(function(e,t){$("#candidateCityId").append($("<option ></option>").attr("value",e).text(t))})),isEditProfile&&""!=cityId&&$("#candidateCityId").val(cityId).trigger("change"),null==$("#candidateCityId").val()&&$("#candidateCityId").prepend($('<option value="" selected>Select City</option>'))}})})),isEditProfile&countryId&&$("#candidateCountryId").val(countryId).trigger("change"),$(document).on("submit","#editGeneralForm",(function(e){e.preventDefault(),processingBtn("#editGeneralForm","#btnEditGeneralSave","loading"),$.ajax({url:updateCandidateUrl,type:"post",data:new FormData(this),dataType:"JSON",contentType:!1,cache:!1,processData:!1,success:function(e){if(e.success){displaySuccessMessage(e.message),hideAddGeneralDiv(),randerCVTemplate(),$("#candidateName").text(e.data.full_name),$("#candidateLocation").text(e.data.candidate.full_location),$("#candidatePhone").text(e.data.phone);var t=e.data.candidateSkill,n='<ul class="pl-3">';t.forEach((function(e){n=n+'<li class="font-weight-bold">'+e+"</li>"})),n+="</ul>",$("#candidateSkillDiv").html(n)}},error:function(e){displayErrorMessage(e.responseJSON.message)},complete:function(){processingBtn("#editGeneralForm","#btnEditGeneralSave")}})})),$(document).on("keyup","#facebookId",(function(){this.value=this.value.toLowerCase()})),$(document).on("keyup","#twitterId",(function(){this.value=this.value.toLowerCase()})),$(document).on("keyup","#linkedinId",(function(){this.value=this.value.toLowerCase()})),$(document).on("keyup","#googlePlusId",(function(){this.value=this.value.toLowerCase()})),$(document).on("keyup","#pinterestId",(function(){this.value=this.value.toLowerCase()})),$(document).on("submit","#editOnlineProfileForm",(function(e){e.preventDefault(),processingBtn("#editOnlineProfileForm","#btnOnlineProfileSave","loading");var t=$("#facebookId").val(),n=$("#twitterId").val(),i=$("#linkedinId").val(),a=$("#googlePlusId").val(),d=$("#pinterestId").val(),o=new RegExp(/^(https?:\/\/)?((m{1}\.)?)?((w{3}\.)?)facebook.[a-z]{2,3}\/?.*/i),l=new RegExp(/^(https?:\/\/)?((m{1}\.)?)?((w{3}\.)?)twitter\.[a-z]{2,3}\/?.*/i),r=new RegExp(/^(https?:\/\/)?((w{3}\.)?)?(plus\.)?(google\.[a-z]{2,3})\/?(([a-zA-Z 0-9._])?).*/i),s=new RegExp(/^(https?:\/\/)?((w{3}\.)?)linkedin\.[a-z]{2,3}\/?.*/i),c=new RegExp(/^(https?:\/\/)?((w{3}\.)?)pinterest\.[a-z]{2,3}\/?.*/i);return urlValidation(t,o),urlValidation(n,l),urlValidation(i,r),urlValidation(a,s),urlValidation(d,c),urlValidation(t,o)?urlValidation(n,l)?urlValidation(i,s)?urlValidation(a,r)?urlValidation(d,c)?void $.ajax({url:updateonlineProfileUrl,type:"post",data:new FormData(this),dataType:"JSON",contentType:!1,cache:!1,processData:!1,success:function(e){e.success&&(displaySuccessMessage(e.message),hideAddOnlineProfileDiv(),$("#candidateOnlineProfileDiv").html(e.data.onlineProfileLayout),$("#addOnlineProfileDiv").html(e.data.editonlineProfileLayout),randerCVTemplate())},error:function(e){displayErrorMessage(e.responseJSON.message)},complete:function(){processingBtn("#editOnlineProfileForm","#btnOnlineProfileSave")}}):(displayErrorMessage("Please enter a valid Pinterest Url"),processingBtn("#editOnlineProfileForm","#btnOnlineProfileSave"),!1):(displayErrorMessage("Please enter a valid Google Plus Url"),processingBtn("#editOnlineProfileForm","#btnOnlineProfileSave"),!1):(displayErrorMessage("Please enter a valid Linkedin Url"),processingBtn("#editOnlineProfileForm","#btnOnlineProfileSave"),!1):(displayErrorMessage("Please enter a valid Twitter Url"),processingBtn("#editOnlineProfileForm","#btnOnlineProfileSave"),!1):(displayErrorMessage("Please enter a valid Facebook Url"),processingBtn("#editOnlineProfileForm","#btnOnlineProfileSave"),!1)})),$(document).on("click",".editGeneralBtn",(function(){showEditGeneralDiv()})),$(document).on("click","#btnGeneralCancel",(function(){hideAddGeneralDiv()})),$(document).on("click",".addOnlineProfileBtn",(function(){showAddOnlineProfileDiv()})),$(document).on("click","#btnOnlineProfileCancel",(function(){hideAddOnlineProfileDiv()})),$(document).on("click",".cv-preview",(function(){$("#cvModal").appendTo("body").modal("show")})),$(document).on("click","#downloadPDF",(function(){var e;e=document.getElementById("cvTemplate"),html2pdf(e)})),$(document).on("click",".printCV",(function(){var e=document.getElementById("cvTemplate"),t=window.open("","Print-Window");t.document.open(),t.document.write('<html><link href="'+bootstarpUrl+'" rel="stylesheet" type="text/css"/><link href="'+styleCssUrl+'" rel="stylesheet" type="text/css"/><link href="'+customCssUrl+'" rel="stylesheet" type="text/css"/><link href="'+fontCssUrl+'" rel="stylesheet" type="text/css"/><body onload="window.print()">'+e.innerHTML+"</body></html>"),t.document.close(),setTimeout((function(){t.close()}),10)}))})),window.renderCandidateData=function(){$.ajax({url:candidateProfileUrl,type:"GET",success:function(e){e.success&&($("#first_name").val(e.data.first_name),$("#last_name").val(e.data.last_name),$("#email").val(e.data.email),$("#phone").val(e.data.phone),$("#candidateCountryId").val(e.data.country_id).trigger("change"),stateId=e.data.state_id,cityId=e.data.city_id)},error:function(e){displayErrorMessage(e.responseJSON.message)}})},window.randerCVTemplate=function(){$("#btnEditGeneralSave").attr("disabled",!0),$.ajax({url:cvTemplateUrl,type:"GET",success:function(e){e&&($("#cvTemplate").html(e),$("#btnEditGeneralSave").attr("disabled",!1))},error:function(e){displayErrorMessage(e.responseJSON.message)}})},window.showEditGeneralDiv=function(){hideAddExperienceDiv(),hideEditExperienceDiv(),hideAddEducationDiv(),hideEditEducationDiv(),hideAddOnlineProfileDiv(),$("#candidateGeneralDiv").hide(),$("#editGeneralDiv").removeClass("d-none"),resetModalForm("#editGeneralForm"),renderCandidateData()},window.hideAddGeneralDiv=function(){$("#candidateGeneralDiv").show(),$("#editGeneralDiv").addClass("d-none")},window.showAddOnlineProfileDiv=function(){hideAddExperienceDiv(),hideEditExperienceDiv(),hideAddEducationDiv(),hideEditEducationDiv(),hideAddGeneralDiv(),$("#candidateOnlineProfileDiv").hide(),$("#addOnlineProfileDiv").removeClass("d-none"),resetModalForm("#editOnlineProfileForm")},window.hideAddOnlineProfileDiv=function(){$("#candidateOnlineProfileDiv").show(),$("#addOnlineProfileDiv").addClass("d-none")}})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+var __webpack_exports__ = {};
+/*!************************************************************************!*\
+  !*** ./resources/assets/js/candidates/candidate-profile/cv-builder.js ***!
+  \************************************************************************/
+
+
+$(document).ready(function () {
+  renderCandidateData();
+  randerCVTemplate();
+  $('#skillId,#candidateCountryId,#candidateStateId,#candidateCityId').select2({
+    width: '100%'
+  });
+  $('#candidateCountryId').on('change', function () {
+    $.ajax({
+      url: companyStateUrl,
+      type: 'get',
+      dataType: 'json',
+      data: {
+        postal: $(this).val()
+      },
+      success: function success(data) {
+        $('#candidateStateId').empty();
+        $('#candidateStateId').append($('<option value="" selected>Select State</option>'));
+        $.each(data.data, function (i, v) {
+          $('#candidateStateId').append($('<option></option>').attr('value', i).text(v));
+        });
+
+        if (isEditProfile && stateId != '') {
+          $('#candidateStateId').val(stateId).trigger('change');
+        }
+
+        if ($('#candidateStateId').val() == null) {
+          $('#candidateStateId').find('option[value=""]').remove();
+          $('#candidateStateId').prepend($('<option value="" selected>Select State</option>'));
+        }
+
+        if ($('#candidateCityId').val() == null) {
+          $('#candidateCityId').prepend($('<option value="" selected>Select City</option>'));
+        }
+      }
+    });
+  });
+  $('#candidateStateId').on('change', function () {
+    $.ajax({
+      url: companyCityUrl,
+      type: 'get',
+      dataType: 'json',
+      data: {
+        state: $(this).val(),
+        country: $('#candidateCountryId').val()
+      },
+      success: function success(data) {
+        $('#candidateCityId').empty();
+        $.each(data.data, function (i, v) {
+          $('#candidateCityId').append($('<option ></option>').attr('value', i).text(v));
+        });
+
+        if (isEditProfile && cityId != '') {
+          $('#candidateCityId').val(cityId).trigger('change');
+        }
+
+        if ($('#candidateCityId').val() == null) {
+          $('#candidateCityId').prepend($('<option value="" selected>Select City</option>'));
+        }
+      }
+    });
+  });
+
+  if (isEditProfile & countryId) {
+    $('#candidateCountryId').val(countryId).trigger('change');
+  }
+
+  $(document).on('submit', '#editGeneralForm', function (e) {
+    e.preventDefault();
+    processingBtn('#editGeneralForm', '#btnEditGeneralSave', 'loading');
+    $.ajax({
+      url: updateCandidateUrl,
+      type: 'post',
+      data: new FormData(this),
+      dataType: 'JSON',
+      contentType: false,
+      cache: false,
+      processData: false,
+      success: function success(result) {
+        if (result.success) {
+          displaySuccessMessage(result.message);
+          hideAddGeneralDiv();
+          randerCVTemplate();
+          $('#candidateName').text(result.data.full_name);
+          $('#candidateLocation').text(result.data.candidate.full_location);
+          $('#candidatePhone').text(result.data.phone);
+          var skills = result.data.candidateSkill;
+          var skillHtml = '<ul class="pl-3">';
+          skills.forEach(function (item) {
+            skillHtml = skillHtml + '<li class="font-weight-bold">' + item + '</li>';
+          });
+          skillHtml = skillHtml + '</ul>';
+          $('#candidateSkillDiv').html(skillHtml);
+        }
+      },
+      error: function error(result) {
+        displayErrorMessage(result.responseJSON.message);
+      },
+      complete: function complete() {
+        processingBtn('#editGeneralForm', '#btnEditGeneralSave');
+      }
+    });
+  });
+  $(document).on('keyup', '#facebookId', function () {
+    this.value = this.value.toLowerCase();
+  });
+  $(document).on('keyup', '#twitterId', function () {
+    this.value = this.value.toLowerCase();
+  });
+  $(document).on('keyup', '#linkedinId', function () {
+    this.value = this.value.toLowerCase();
+  });
+  $(document).on('keyup', '#googlePlusId', function () {
+    this.value = this.value.toLowerCase();
+  });
+  $(document).on('keyup', '#pinterestId', function () {
+    this.value = this.value.toLowerCase();
+  });
+  $(document).on('submit', '#editOnlineProfileForm', function (e) {
+    e.preventDefault();
+    processingBtn('#editOnlineProfileForm', '#btnOnlineProfileSave', 'loading');
+    var facebookUrl = $('#facebookId').val();
+    var twitterUrl = $('#twitterId').val();
+    var linkedInUrl = $('#linkedinId').val();
+    var googlePlusUrl = $('#googlePlusId').val();
+    var pinterestUrl = $('#pinterestId').val();
+    var facebookExp = new RegExp(/^(https?:\/\/)?((m{1}\.)?)?((w{3}\.)?)facebook.[a-z]{2,3}\/?.*/i);
+    var twitterExp = new RegExp(/^(https?:\/\/)?((m{1}\.)?)?((w{3}\.)?)twitter\.[a-z]{2,3}\/?.*/i);
+    var googlePlusExp = new RegExp(/^(https?:\/\/)?((w{3}\.)?)?(plus\.)?(google\.[a-z]{2,3})\/?(([a-zA-Z 0-9._])?).*/i);
+    var linkedInExp = new RegExp(/^(https?:\/\/)?((w{3}\.)?)linkedin\.[a-z]{2,3}\/?.*/i);
+    var pinterestExp = new RegExp(/^(https?:\/\/)?((w{3}\.)?)pinterest\.[a-z]{2,3}\/?.*/i);
+    urlValidation(facebookUrl, facebookExp);
+    urlValidation(twitterUrl, twitterExp);
+    urlValidation(linkedInUrl, googlePlusExp);
+    urlValidation(googlePlusUrl, linkedInExp);
+    urlValidation(pinterestUrl, pinterestExp);
+
+    if (!urlValidation(facebookUrl, facebookExp)) {
+      displayErrorMessage('Please enter a valid Facebook Url');
+      processingBtn('#editOnlineProfileForm', '#btnOnlineProfileSave');
+      return false;
+    }
+
+    if (!urlValidation(twitterUrl, twitterExp)) {
+      displayErrorMessage('Please enter a valid Twitter Url');
+      processingBtn('#editOnlineProfileForm', '#btnOnlineProfileSave');
+      return false;
+    }
+
+    if (!urlValidation(linkedInUrl, linkedInExp)) {
+      displayErrorMessage('Please enter a valid Linkedin Url');
+      processingBtn('#editOnlineProfileForm', '#btnOnlineProfileSave');
+      return false;
+    }
+
+    if (!urlValidation(googlePlusUrl, googlePlusExp)) {
+      displayErrorMessage('Please enter a valid Google Plus Url');
+      processingBtn('#editOnlineProfileForm', '#btnOnlineProfileSave');
+      return false;
+    }
+
+    if (!urlValidation(pinterestUrl, pinterestExp)) {
+      displayErrorMessage('Please enter a valid Pinterest Url');
+      processingBtn('#editOnlineProfileForm', '#btnOnlineProfileSave');
+      return false;
+    }
+
+    $.ajax({
+      url: updateonlineProfileUrl,
+      type: 'post',
+      data: new FormData(this),
+      dataType: 'JSON',
+      contentType: false,
+      cache: false,
+      processData: false,
+      success: function success(result) {
+        if (result.success) {
+          displaySuccessMessage(result.message);
+          hideAddOnlineProfileDiv();
+          $('#candidateOnlineProfileDiv').html(result.data.onlineProfileLayout);
+          $('#addOnlineProfileDiv').html(result.data.editonlineProfileLayout);
+          randerCVTemplate();
+        }
+      },
+      error: function error(result) {
+        displayErrorMessage(result.responseJSON.message);
+      },
+      complete: function complete() {
+        processingBtn('#editOnlineProfileForm', '#btnOnlineProfileSave');
+      }
+    });
+  });
+  $(document).on('click', '.editGeneralBtn', function () {
+    showEditGeneralDiv();
+  });
+  $(document).on('click', '#btnGeneralCancel', function () {
+    hideAddGeneralDiv();
+  });
+  $(document).on('click', '.addOnlineProfileBtn', function () {
+    showAddOnlineProfileDiv();
+  });
+  $(document).on('click', '#btnOnlineProfileCancel', function () {
+    hideAddOnlineProfileDiv();
+  });
+  $(document).on('click', '.cv-preview', function () {
+    $('#cvModal').appendTo('body').modal('show');
+  });
+  $(document).on('click', '#downloadPDF', function () {
+    makeCVPDF();
+  });
+  $(document).on('click', '.printCV', function () {
+    var divToPrint = document.getElementById('cvTemplate');
+    var newWin = window.open('', 'Print-Window');
+    newWin.document.open();
+    newWin.document.write('<html>' + '<link href="' + bootstarpUrl + '" rel="stylesheet" type="text/css"/>' + '<link href="' + styleCssUrl + '" rel="stylesheet" type="text/css"/>' + '<link href="' + customCssUrl + '" rel="stylesheet" type="text/css"/>' + '<link href="' + fontCssUrl + '" rel="stylesheet" type="text/css"/>' + '<body onload="window.print()">' + divToPrint.innerHTML + '</body></html>');
+    newWin.document.close();
+    setTimeout(function () {
+      newWin.close();
+    }, 10);
+  });
+});
+
+window.renderCandidateData = function () {
+  $.ajax({
+    url: candidateProfileUrl,
+    type: 'GET',
+    success: function success(result) {
+      if (result.success) {
+        $('#first_name').val(result.data.first_name);
+        $('#last_name').val(result.data.last_name);
+        $('#email').val(result.data.email);
+        $('#phone').val(result.data.phone);
+        $('#candidateCountryId').val(result.data.country_id).trigger('change');
+        stateId = result.data.state_id;
+        cityId = result.data.city_id;
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    }
+  });
+};
+
+window.randerCVTemplate = function () {
+  $('#btnEditGeneralSave').attr('disabled', true);
+  $.ajax({
+    url: cvTemplateUrl,
+    type: 'GET',
+    success: function success(result) {
+      if (result) {
+        $('#cvTemplate').html(result);
+        $('#btnEditGeneralSave').attr('disabled', false);
+      }
+    },
+    error: function error(result) {
+      displayErrorMessage(result.responseJSON.message);
+    }
+  });
+};
+
+window.showEditGeneralDiv = function () {
+  hideAddExperienceDiv();
+  hideEditExperienceDiv();
+  hideAddEducationDiv();
+  hideEditEducationDiv();
+  hideAddOnlineProfileDiv();
+  $('#candidateGeneralDiv').hide();
+  $('#editGeneralDiv').removeClass('d-none');
+  resetModalForm('#editGeneralForm');
+  renderCandidateData();
+};
+
+window.hideAddGeneralDiv = function () {
+  $('#candidateGeneralDiv').show();
+  $('#editGeneralDiv').addClass('d-none');
+};
+
+window.showAddOnlineProfileDiv = function () {
+  hideAddExperienceDiv();
+  hideEditExperienceDiv();
+  hideAddEducationDiv();
+  hideEditEducationDiv();
+  hideAddGeneralDiv();
+  $('#candidateOnlineProfileDiv').hide();
+  $('#addOnlineProfileDiv').removeClass('d-none');
+  resetModalForm('#editOnlineProfileForm');
+};
+
+window.hideAddOnlineProfileDiv = function () {
+  $('#candidateOnlineProfileDiv').show();
+  $('#addOnlineProfileDiv').addClass('d-none');
+};
+
+function makeCVPDF() {
+  var element = document.getElementById('cvTemplate');
+  html2pdf(element);
+  return;
+}
+/******/ })()
+;
